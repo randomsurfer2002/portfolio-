@@ -1,659 +1,583 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aaditya Verma | Automotive & Industrial Design</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Syncopate:wght@700;800&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['Syncopate', 'sans-serif'],
-            subheading: ['Space Grotesk', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-            body: ['Plus Jakarta Sans', 'sans-serif'],
-          },
-          colors: {
-            darkbg: '#040405',
-            neonred: '#FF0033',
-            glass: 'rgba(18, 18, 22, 0.5)',
-            glassborder: 'rgba(255, 0, 51, 0.2)'
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aaditya Verma | Need For Speed: Underground Portfolio</title>
+    <!-- Google Fonts for Gaming Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #08080c;
+            --panel-bg: rgba(18, 19, 28, 0.85);
+            --panel-border: #00f3ff;
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff0055;
+            --neon-yellow: #ffe600;
+            --neon-green: #00ff66;
+            --text-main: #e0e6ed;
+            --text-dim: #8a99ad;
+            --font-head: 'Orbitron', sans-serif;
+            --font-code: 'Fira Code', monospace;
         }
-      }
-    }
-  </script>
-  <style>
-    body { 
-      background-color: #040405; 
-      color: #FFFFFF; 
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      cursor: none;
-    }
-    
-    .noise-overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      pointer-events: none; z-index: 9999; opacity: 0.035;
-      background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-    }
 
-    .glow-orb {
-      position: absolute; border-radius: 50%; filter: blur(140px); pointer-events: none; z-index: 0;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    .text-stroke { -webkit-text-stroke: 2px #FF0033; color: transparent; }
-    .text-stroke-white { -webkit-text-stroke: 1.5px rgba(255,255,255,0.2); color: transparent; }
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(0, 243, 255, 0.08) 0%, transparent 60%),
+                linear-gradient(0deg, rgba(255, 0, 85, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 24px;
+            color: var(--text-main);
+            font-family: var(--font-code);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
 
-    .glass-card {
-      background: rgba(14, 14, 18, 0.6);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: border-color 0.4s, box-shadow 0.4s, transform 0.2s ease-out;
-      transform-style: preserve-3d;
-    }
-    
-    .glass-card:hover {
-      border-color: rgba(255, 0, 51, 0.6);
-      box-shadow: 0 10px 40px -10px rgba(255, 0, 51, 0.3);
-    }
+        /* Container & Scanline Overlay */
+        .arcade-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.25), inset 0 0 15px rgba(0, 243, 255, 0.1);
+            background: var(--panel-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
 
-    #cursor {
-      position: fixed; top: 0; left: 0; width: 18px; height: 18px;
-      background: #FF0033; border-radius: 50%;
-      pointer-events: none; z-index: 10000; mix-blend-mode: difference;
-      transition: transform 0.08s ease-out, width 0.2s, height 0.2s, background 0.2s;
-      transform: translate(-50%, -50%);
-    }
+        .arcade-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.6;
+        }
 
-    .marquee-container { 
-      overflow: hidden; white-space: nowrap; width: 100%; background: #FF0033; color: #040405; 
-      padding: 1rem 0; font-family: 'Syncopate', sans-serif; font-weight: 800; font-size: 1.25rem; 
-      text-transform: uppercase; letter-spacing: 0.15em; 
-    }
-    .marquee-content { display: inline-block; animation: marquee 18s linear infinite; }
-    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        /* Header Banner */
+        header {
+            border-bottom: 2px solid var(--neon-cyan);
+            padding: 25px;
+            background: linear-gradient(90deg, rgba(255,0,85,0.2) 0%, rgba(0,243,255,0.1) 100%);
+            text-align: center;
+            position: relative;
+        }
 
-    .filter-btn.active {
-      background-color: #FF0033;
-      color: #040405;
-      border-color: #FF0033;
-    }
+        header h1 {
+            font-family: var(--font-head);
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
 
-    .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(4, 4, 5, 0.96); backdrop-filter: blur(12px); }
-  </style>
+        .sub-header {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-pink);
+            font-size: 0.85rem;
+            color: var(--neon-yellow);
+        }
+
+        /* Menu Navigation */
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            background: #0d0e14;
+            border-bottom: 2px solid var(--neon-cyan);
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 10px;
+            background: transparent;
+            border: none;
+            border-right: 1px solid rgba(0, 243, 255, 0.2);
+            color: var(--text-dim);
+            font-family: var(--font-head);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        /* Main Content Panels */
+        .content-panel {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .content-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: var(--font-head);
+            color: var(--neon-pink);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px var(--neon-pink);
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 12px;
+        }
+
+        /* Profile Grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid { grid-template-columns: 1fr; }
+        }
+
+        .avatar-box {
+            border: 1px solid var(--neon-cyan);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            text-align: center;
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
+        }
+
+        .avatar-img {
+            width: 100%;
+            max-width: 200px;
+            border: 2px solid var(--neon-yellow);
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .bio-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .quote-box {
+            border-left: 3px solid var(--neon-yellow);
+            background: rgba(255, 230, 0, 0.05);
+            padding: 12px 15px;
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        /* Attribute Stats Bars */
+        .stat-group {
+            margin-bottom: 15px;
+        }
+
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-bar-bg {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+
+        /* Tech Pills */
+        .pill-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .pill {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* Workflow Pipeline */
+        .workflow-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .step-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--panel-border);
+            padding: 15px;
+            position: relative;
+        }
+
+        .step-number {
+            font-family: var(--font-head);
+            color: var(--neon-yellow);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        /* Projects Layout */
+        .project-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-cyan);
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+        }
+
+        .project-card h3 {
+            font-family: var(--font-head);
+            color: var(--neon-yellow);
+            margin-bottom: 10px;
+        }
+
+        .spec-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .spec-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .spec-list li::before {
+            content: "►";
+            position: absolute;
+            left: 0;
+            color: var(--neon-pink);
+        }
+
+        /* Garage Showcase Grid */
+        .garage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .garage-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .garage-card:hover {
+            border-color: var(--neon-pink);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+        }
+
+        .garage-card h4 {
+            font-family: var(--font-head);
+            color: var(--neon-cyan);
+            margin-bottom: 8px;
+        }
+
+        /* Terminal Footer / Credits */
+        .terminal-box {
+            background: #000;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 20px;
+            font-family: var(--font-code);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.15);
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.3rem; }
+            .sub-header { flex-direction: column; gap: 5px; text-align: center; }
+            .nav-btn { min-width: 100%; border-bottom: 1px solid rgba(0, 243, 255, 0.2); }
+        }
+    </style>
 </head>
-<body class="selection:bg-neonred selection:text-black antialiased overflow-x-hidden font-body">
+<body>
 
-  <div class="noise-overlay"></div>
-  <div id="cursor"></div>
-
-  <!-- Background Glow FX -->
-  <div class="glow-orb bg-neonred w-[700px] h-[700px] top-[-250px] left-[-200px] opacity-20"></div>
-  <div class="glow-orb bg-red-950 w-[600px] h-[600px] top-[40%] right-[-150px] opacity-25"></div>
-
-  <!-- Header -->
-  <header class="fixed top-0 w-full z-50 bg-darkbg/50 backdrop-blur-2xl border-b border-white/5 px-8 py-5 flex justify-between items-center">
-    <a href="#" class="font-display font-extrabold text-lg tracking-wider text-white">AADITYA<span class="text-neonred">.</span>VERMA</a>
-    
-    <nav class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest text-gray-400">
-      <a href="#work" class="hover:text-neonred transition-colors">// WORK</a>
-      <a href="#about" class="hover:text-neonred transition-colors">// ABOUT</a>
-      <a href="#game" class="hover:text-neonred transition-colors">// MINI GAME</a>
-      <a href="#research" class="hover:text-neonred transition-colors">// RESEARCH</a>
-    </nav>
-
-    <div class="flex items-center gap-3 border border-white/10 px-4 py-1.5 rounded-full bg-white/5">
-      <span class="w-2 h-2 rounded-full bg-neonred animate-pulse shadow-[0_0_8px_#FF0033]"></span>
-      <span class="text-xs font-mono text-gray-300 tracking-wider uppercase">AVAILABLE 2026</span>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="pt-36 pb-16 px-6 max-w-7xl mx-auto flex flex-col justify-center relative min-h-screen">
-    <div class="z-10 relative flex flex-col items-center text-center">
-      
-      <!-- Overlapping 3D Cutout Render -->
-      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[950px] z-20 pointer-events-none">
-        <img src="hero-car-cutout.png" alt="Hero Concept Render" class="w-full drop-shadow-[0_30px_70px_rgba(255,0,51,0.4)]">
-      </div>
-
-      <!-- Hero Typography -->
-      <h1 class="font-display font-extrabold text-[4.5rem] sm:text-[7.5rem] md:text-[9.5rem] uppercase leading-[0.85] tracking-tighter z-10 select-none">
-        <span class="text-stroke">AUTOMOTIVE</span><br>
-        <span class="text-white">DESIGNER</span><br>
-        <span class="text-stroke-white text-[3rem] sm:text-[5.5rem] md:text-[7rem]">& INDUSTRIAL</span>
-      </h1>
-      
-      <div class="mt-12 z-30 flex flex-wrap justify-center gap-4">
-        <span class="font-mono text-neonred text-xs uppercase tracking-widest bg-darkbg/90 px-5 py-2.5 border border-neonred/40 backdrop-blur-md shadow-[0_0_20px_rgba(255,0,51,0.2)]">
-          BLENDER / CYCLES / ALIAS / PROTOTYPING
-        </span>
-      </div>
-    </div>
-    
-    <!-- Live Telemetry Stat Bar -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-28 z-30 font-mono border-t border-b border-white/10 py-6 bg-white/[0.02]">
-      <div class="px-4">
-        <span class="text-xs text-gray-500 block uppercase">// FOCUS</span>
-        <span class="text-lg font-bold text-white font-subheading uppercase">CONCEPT EVs</span>
-      </div>
-      <div class="px-4 border-l border-white/10">
-        <span class="text-xs text-gray-500 block uppercase">// QUALIFICATION</span>
-        <span class="text-lg font-bold text-neonred font-subheading uppercase">CEED 2026 AIR 1215</span>
-      </div>
-      <div class="px-4 border-l border-white/10">
-        <span class="text-xs text-gray-500 block uppercase">// HIGHER ED</span>
-        <span class="text-lg font-bold text-white font-subheading uppercase">M.DES NIFT ND</span>
-      </div>
-      <div class="px-4 border-l border-white/10">
-        <span class="text-xs text-gray-500 block uppercase">// LOCATION</span>
-        <span class="text-lg font-bold text-white font-subheading uppercase">NEW DELHI, IN</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Marquee Ticker -->
-  <div class="marquee-container shadow-[0_0_30px_rgba(255,0,51,0.3)] relative z-20">
-    <div class="marquee-content">
-      ★ AUTOMOTIVE SURFACING ★ CONCEPT EV DESIGN ★ BLENDER & CYCLES ★ IoT HARDWARE ★ INDUSTRIAL PROTOTYPING ★ 
-      ★ AUTOMOTIVE SURFACING ★ CONCEPT EV DESIGN ★ BLENDER & CYCLES ★ IoT HARDWARE ★ INDUSTRIAL PROTOTYPING ★ 
-    </div>
-  </div>
-
-  <!-- Projects Section -->
-  <section id="work" class="py-32 px-6 max-w-7xl mx-auto relative z-20">
-    
-    <!-- Header & Interactive Category Filter -->
-    <div class="mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
-      <div>
-        <span class="font-mono text-xs text-neonred tracking-widest uppercase block mb-2">// SELECTED WORKS</span>
-        <h2 class="font-display text-4xl sm:text-6xl uppercase font-bold text-stroke-white leading-none">FEATURED <span class="text-white text-stroke-0">PROJECTS</span></h2>
-      </div>
-
-      <!-- Filter Buttons -->
-      <div class="flex flex-wrap gap-2 font-mono text-xs">
-        <button class="filter-btn active border border-white/20 px-4 py-2 uppercase tracking-wider transition-all" onclick="filterProjects('all', this)">ALL</button>
-        <button class="filter-btn border border-white/20 px-4 py-2 uppercase tracking-wider text-gray-400 transition-all" onclick="filterProjects('auto', this)">AUTOMOTIVE</button>
-        <button class="filter-btn border border-white/20 px-4 py-2 uppercase tracking-wider text-gray-400 transition-all" onclick="filterProjects('industrial', this)">INDUSTRIAL</button>
-      </div>
-    </div>
-
-    <!-- Project Bento Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projectsGrid">
-      
-      <!-- Project 1 -->
-      <div class="glass-card project-item group cursor-pointer p-3 rounded-sm flex flex-col h-[500px]" data-category="auto">
-        <div class="overflow-hidden h-3/4 w-full relative rounded-sm">
-          <img src="car-render-1.jpg" alt="Hyper-Lethal Concept" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 project-img">
-          <span class="absolute top-4 left-4 bg-darkbg/80 border border-neonred/50 text-neonred font-mono text-xs px-3 py-1 uppercase tracking-widest">AUTOMOTIVE</span>
-        </div>
-        <div class="h-1/4 p-4 flex flex-col justify-between">
-          <div class="flex justify-between items-baseline">
-            <h3 class="font-bold font-subheading text-2xl uppercase tracking-wide">Hyper-Lethal Concept</h3>
-            <span class="font-mono text-xs text-gray-500">[01]</span>
-          </div>
-          <p class="text-xs text-gray-400 font-mono">Aerodynamic surface study focusing on aggressive downforce and active air channels.</p>
-        </div>
-      </div>
-
-      <!-- Project 2 -->
-      <div class="glass-card project-item group cursor-pointer p-3 rounded-sm flex flex-col h-[500px]" data-category="auto">
-        <div class="overflow-hidden h-3/4 w-full relative rounded-sm">
-          <img src="car-render-clay.jpg" alt="EV Surface Topology" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 project-img">
-          <span class="absolute top-4 left-4 bg-darkbg/80 border border-white/20 text-white font-mono text-xs px-3 py-1 uppercase tracking-widest">SURFACING / CAD</span>
-        </div>
-        <div class="h-1/4 p-4 flex flex-col justify-between">
-          <div class="flex justify-between items-baseline">
-            <h3 class="font-bold font-subheading text-2xl uppercase tracking-wide">Concept EV Topology</h3>
-            <span class="font-mono text-xs text-gray-500">[02]</span>
-          </div>
-          <p class="text-xs text-gray-400 font-mono">Class-A surfacing exploration in Blender Cycles emphasizing light reflections.</p>
-        </div>
-      </div>
-
-      <!-- Project 3 -->
-      <div class="glass-card project-item group cursor-pointer p-3 rounded-sm flex flex-col h-[520px]" data-category="industrial">
-        <div class="overflow-hidden h-2/3 w-full relative rounded-sm">
-          <img src="vayura-render-1.jpg" alt="Vayura Router" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 project-img">
-          <span class="absolute top-4 left-4 bg-darkbg/80 border border-neonred/50 text-neonred font-mono text-xs px-3 py-1 uppercase tracking-widest">INDUSTRIAL</span>
-        </div>
-        <div class="h-1/3 p-4 flex flex-col justify-between">
-          <div>
-            <div class="flex justify-between items-baseline">
-              <h3 class="font-bold font-subheading text-2xl uppercase tracking-wide">Vayura Router System</h3>
-              <span class="font-mono text-xs text-gray-500">[03]</span>
+    <div class="arcade-container">
+        <!-- HEADER -->
+        <header>
+            <h1>▲ NEED FOR SPEED: UNDERGROUND PORTFOLIO ▲</h1>
+            <div class="sub-header">
+                <span>[ PLAYER_1: AADITYA VERMA ]</span>
+                <span>[ LEVEL: FINAL YEAR B.TECH ]</span>
+                <span>[ BUILD: UNICREN V2.6 ]</span>
             </div>
-            <p class="text-xs text-gray-400 font-mono mt-2">Dual-purpose Wi-Fi 6 router & smart scent-diffusion unit utilizing active thermal airflow.</p>
-          </div>
-        </div>
-      </div>
+        </header>
 
-      <!-- Project 4 -->
-      <div class="glass-card project-item group cursor-pointer p-3 rounded-sm flex flex-col h-[520px]" data-category="industrial">
-        <div class="overflow-hidden h-2/3 w-full relative rounded-sm">
-          <img src="tablet-box-1.jpg" alt="Smart Tablet Box" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 project-img">
-          <span class="absolute top-4 left-4 bg-darkbg/80 border border-white/20 text-white font-mono text-xs px-3 py-1 uppercase tracking-widest">IoT HARDWARE</span>
-        </div>
-        <div class="h-1/3 p-4 flex flex-col justify-between">
-          <div>
-            <div class="flex justify-between items-baseline">
-              <h3 class="font-bold font-subheading text-2xl uppercase tracking-wide">Smart Tablet Box</h3>
-              <span class="font-mono text-xs text-gray-500">[04]</span>
+        <!-- MENU NAVIGATION -->
+        <nav>
+            <button class="nav-btn active" onclick="openTab(event, 'profile')">[01] DRIVER_PROFILE</button>
+            <button class="nav-btn" onclick="openTab(event, 'workflow')">[02] TUNING_WORKFLOW</button>
+            <button class="nav-btn" onclick="openTab(event, 'medbox')">[03] MED-BOX</button>
+            <button class="nav-btn" onclick="openTab(event, 'vayura')">[04] VAYURA</button>
+            <button class="nav-btn" onclick="openTab(event, 'garage')">[05] THE_GARAGE</button>
+            <button class="nav-btn" onclick="openTab(event, 'credits')">[06] CREDITS</button>
+        </nav>
+
+        <!-- [01] DRIVER PROFILE -->
+        <div id="profile" class="content-panel active">
+            <h2>01 // DRIVER PROFILE</h2>
+            <div class="profile-grid">
+                <div class="avatar-box">
+                    <!-- SVG Arcade Avatar Placeholder -->
+                    <svg class="avatar-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="100" fill="#0d0e14"/>
+                        <circle cx="50" cy="35" r="20" fill="#00f3ff"/>
+                        <path d="M20 80C20 65 35 60 50 60C65 60 80 65 80 80V90H20V80Z" fill="#ff0055"/>
+                        <rect x="35" y="25" width="30" height="10" rx="3" fill="#12131c"/>
+                    </svg>
+                    <p style="font-weight: 700; color: var(--neon-cyan);">AVATAR // RACER_01</p>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Go-Kart Chassis Builder</p>
+                </div>
+                
+                <div class="bio-box">
+                    <div class="quote-box">
+                        "Gifted with the brain and logic of an engineer, but a heart full of emotion and love for aesthetics. This helps me develop meaningful projects with practicality and expression."
+                    </div>
+                    
+                    <h3>📊 DRIVER ATTRIBUTES & STATS</h3>
+                    <br>
+                    <div class="stat-group">
+                        <div class="stat-label"><span>Engineering & Logic</span><span>90%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="90%"></div></div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label"><span>Aesthetics & Design</span><span>100%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="100%"></div></div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label"><span>3D Modeling & Rendering</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="95%"></div></div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label"><span>User Empathy</span><span>82%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="82%"></div></div>
+                    </div>
+
+                    <h3 style="margin-top: 25px;">🎓 EDUCATION LOG</h3>
+                    <p style="font-size: 0.9rem; margin-top: 5px;">• <strong>B.Tech in Information Technology:</strong> KNIT Sultanpur (2022–2026)</p>
+                    <p style="font-size: 0.9rem;">• <strong>High School & Higher Secondary:</strong> DPS Agra (2017–2020)</p>
+
+                    <h3 style="margin-top: 20px;">🛠️ SOFTWARE STACK</h3>
+                    <div class="pill-container">
+                        <span class="pill">Blender</span>
+                        <span class="pill">Photoshop</span>
+                        <span class="pill">Illustrator</span>
+                        <span class="pill">Canva</span>
+                    </div>
+                </div>
             </div>
-            <p class="text-xs text-gray-400 font-mono mt-2">Medication management hardware featuring a 7x3 OLED matrix UI and interactive alerts.</p>
-          </div>
         </div>
-      </div>
 
-    </div>
-  </section>
-
-  <!-- About / Creator Bento Section -->
-  <section id="about" class="py-24 px-6 max-w-7xl mx-auto border-t border-white/10 relative z-20">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
-      
-      <!-- Profile Portrait -->
-      <div class="md:col-span-5 glass-card p-3 rounded-sm min-h-[450px] relative overflow-hidden">
-        <img src="profile-portrait.jpg" alt="Aaditya Verma" class="w-full h-full object-cover rounded-sm grayscale contrast-125 hover:grayscale-0 transition-all duration-500">
-        <div class="absolute bottom-6 left-6 right-6 bg-darkbg/80 backdrop-blur-md p-4 border border-white/10 font-mono text-xs">
-          <span class="text-neonred font-bold block">// DESIGNER PROFILE</span>
-          <span class="text-white font-subheading text-lg font-bold">AADITYA VERMA</span>
-        </div>
-      </div>
-
-      <!-- Biography & Background -->
-      <div class="md:col-span-7 glass-card p-8 rounded-sm flex flex-col justify-between">
-        <div>
-          <span class="font-mono text-xs text-neonred tracking-widest uppercase">// BACKGROUND & PHILOSOPHY</span>
-          <h2 class="font-display text-3xl sm:text-4xl uppercase font-bold mt-2 mb-6">BRIDGING HIGH PERFORMANCE & FUNCTION</h2>
-          
-          <p class="text-gray-300 font-body text-sm leading-relaxed mb-6">
-            With a technical foundation in Information Technology from KNIT Sultanpur and advanced design training at NIFT New Delhi, I specialize in blending aggressive automotive aesthetics with functional ergonomics.
-          </p>
-
-          <div class="grid grid-cols-2 gap-4 font-mono text-xs border-t border-white/10 pt-6">
-            <div>
-              <span class="text-gray-500 block mb-1">SKILLS & TOOLS</span>
-              <ul class="text-gray-300 space-y-1">
-                <li>• Blender 3D / Cycles</li>
-                <li>• Concept Surfacing</li>
-                <li>• Physical Prototyping</li>
-                <li>• Arduino / IoT Hardware</li>
-              </ul>
+        <!-- [02] TUNING WORKFLOW -->
+        <div id="workflow" class="content-panel">
+            <h2>02 // TUNING WORKFLOW</h2>
+            <p>Methodology for engineering and aesthetic execution pipeline:</p>
+            
+            <div class="workflow-timeline">
+                <div class="step-card">
+                    <div class="step-number">STAGE 01</div>
+                    <h4 style="color: #fff;">RESEARCH</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Problem statements identified and project functionality outlined.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">STAGE 02</div>
+                    <h4 style="color: #fff;">MANUAL DRAWING</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Sketch ideations and forms decided by pen-to-paper drawing.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">STAGE 03</div>
+                    <h4 style="color: #fff;">3D MODELING</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Mesh setup, polygon refinement, and materials finalization.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">STAGE 04</div>
+                    <h4 style="color: #fff;">RENDER ENGINES</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">High-fidelity rendering using Blender Cycles engine.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">STAGE 05</div>
+                    <h4 style="color: #fff;">FINAL SKETCH</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Color and form polishing for complete design alignment.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">STAGE 06</div>
+                    <h4 style="color: #fff;">FINAL RENDERS</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Post-processed outputs optimized for portfolio display.</p>
+                </div>
             </div>
-            <div>
-              <span class="text-gray-500 block mb-1">EDUCATION</span>
-              <ul class="text-gray-300 space-y-1">
-                <li>• M.Des — NIFT New Delhi</li>
-                <li>• B.Tech IT — KNIT Sultanpur</li>
-                <li>• High School — DPS Agra</li>
-              </ul>
+        </div>
+
+        <!-- [03] SMART TABLET BOX -->
+        <div id="medbox" class="content-panel">
+            <h2>03 // PROJECT_01: SMART TABLET BOX</h2>
+            <div class="project-card">
+                <h3>IoT MEDICATION MANAGEMENT SYSTEM</h3>
+                <p style="font-size: 0.9rem; color: var(--text-dim);">
+                    Designed to eliminate medication non-adherence through visual haptics and real-time digital feedback. Features a 7x3 matrix covering a full weekly cycle (Morning, Afternoon, Night) with high-contrast backlit compartments.
+                </p>
+                <ul class="spec-list">
+                    <li><strong>Temporal Logic Matrix:</strong> 7-Day, 3-Tier Grid (M/A/N) layout for instant regimen status.</li>
+                    <li><strong>Chromatic Cues:</strong> Color-coded backlighting (Warm/Cool/Neutral) for dosage differentiation in low light.</li>
+                    <li><strong>Information-Rich HUD:</strong> Front OLED display showing environmental context (25°C, humidity) affecting medication.</li>
+                    <li><strong>Connectivity Stack:</strong> Bluetooth & Wi-Fi sync for automated caregiver notifications.</li>
+                </ul>
             </div>
-          </div>
         </div>
 
-        <div class="mt-8 pt-6 border-t border-white/10 flex justify-between items-center">
-          <span class="font-mono text-xs text-gray-500">CONTACT DIRECTLY:</span>
-          <a href="tel:9368891933" class="font-mono text-sm text-neonred hover:underline font-bold">+91 9368891933</a>
+        <!-- [04] VAYURA -->
+        <div id="vayura" class="content-panel">
+            <h2>04 // PROJECT_02: VAYURA</h2>
+            <div class="project-card">
+                <h3>DUAL-PURPOSE ATMOSPHERIC DEVICE</h3>
+                <p style="font-size: 0.9rem; color: var(--text-dim);">
+                    Merges a high-performance Wi-Fi 6 router with a smart scent-diffusion system. Utilizes active waste heat generated by the router's internal PCB to facilitate essential oil diffusion through a borosilicate glass column.
+                </p>
+                <ul class="spec-list">
+                    <li><strong>Thermal Scavenging:</strong> Engineered airflow channels heat from electronics directly into scent diffusion.</li>
+                    <li><strong>Material Contrast:</strong> Organic wood-grain base balanced against a precision monolithic spire.</li>
+                    <li><strong>Circular Haptics:</strong> Base LED ring provides non-intrusive ambient connectivity and oil-level alerts.</li>
+                    <li><strong>Modular Encapsulation:</strong> Quick-swap glass capsules enable maintenance without cross-contamination.</li>
+                </ul>
+            </div>
         </div>
-      </div>
 
+        <!-- [05] THE GARAGE -->
+        <div id="garage" class="content-panel">
+            <h2>05 // THE GARAGE (3D CONCEPT ART)</h2>
+            <div class="garage-grid">
+                <div class="garage-card">
+                    <h4>PORSCHE 356 OUTLAW</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Vintage 356 custom build with wide rear arches, #130 racing circle, and red wire rims.</p>
+                </div>
+                <div class="garage-card">
+                    <h4>CARBON WHEEL ASSEMBLY</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Michelin slick tire mounted on carbon-fiber fender weave with gold center-lock wheel.</p>
+                </div>
+                <div class="garage-card">
+                    <h4>NISSAN Z GT WIDEBODY</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Cyan track beast featuring chassis-mounted GT wing and Donut roundel livery.</p>
+                </div>
+                <div class="garage-card">
+                    <h4>RCB F1 CAR LIVERY</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Matte black Formula 1 vehicle accented with Royal Challengers and Puma branding.</p>
+                </div>
+                <div class="garage-card">
+                    <h4>HYPERCAR "ORANGE WIDOW"</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Aggressive orange widebody hypercar with front splitter and halo ring optics.</p>
+                </div>
+                <div class="garage-card">
+                    <h4>BMW M4 GT & FERRARI F1</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Dark blue BMW M4 GT setup alongside a showcase Ferrari Formula 1 concept.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- [06] CREDITS -->
+        <div id="credits" class="content-panel">
+            <h2>06 // CREDITS</h2>
+            <div class="terminal-box">
+                <p>====================================================================</p>
+                <p>[!] MISSION ACCOMPLISHED</p>
+                <br>
+                <p>THANK YOU FOR WATCHING!</p>
+                <br>
+                <p>DESIGNER  : AADITYA VERMA</p>
+                <p>BRAND     : UNICREN</p>
+                <p>SPECIALTY : INDUSTRIAL DESIGN / AUTOMOTIVE CONCEPT ART / PRODUCT DEVELOPMENT</p>
+                <br>
+                <p>[ STATUS: READY FOR RECRUITMENT / CREATIVE COLLABORATION ]</p>
+                <p>====================================================================</p>
+            </div>
+        </div>
     </div>
-  </section>
 
-  <!-- MINI GAME SECTION -->
-  <section id="game" class="py-24 px-6 border-t border-white/10 relative z-20">
-    <div class="max-w-7xl mx-auto">
-      
-      <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div>
-          <span class="font-mono text-xs text-neonred tracking-widest uppercase block mb-2">// INTERACTIVE TELEMETRY</span>
-          <h2 class="font-display text-3xl sm:text-5xl uppercase font-bold">CONCEPT EV <span class="text-neonred">TEST DRIVE</span></h2>
-        </div>
-        <div class="font-mono text-xs text-gray-400">
-          CONTROLS: <span class="text-white font-bold">[W / A / S / D]</span> or <span class="text-white font-bold">[ARROW KEYS]</span> TO STEER
-        </div>
-      </div>
-
-      <div class="glass-card p-6 rounded-sm relative overflow-hidden flex flex-col gap-4">
-        
-        <!-- Game HUD Overhead Bar -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs border-b border-white/10 pb-4">
-          <div>
-            <span class="text-gray-500 block uppercase">// SCORE</span>
-            <span id="gameScore" class="text-lg font-bold text-neonred font-subheading">0000</span>
-          </div>
-          <div>
-            <span class="text-gray-500 block uppercase">// SPEED</span>
-            <span id="gameSpeed" class="text-lg font-bold text-white font-subheading">0 KM/H</span>
-          </div>
-          <div>
-            <span class="text-gray-500 block uppercase">// DESIGN NODES</span>
-            <span id="gameNodes" class="text-lg font-bold text-cyan-400 font-subheading">0 / 5</span>
-          </div>
-          <div>
-            <span class="text-gray-500 block uppercase">// STATUS</span>
-            <span class="text-lg font-bold text-emerald-400 font-subheading uppercase">ONLINE</span>
-          </div>
-        </div>
-
-        <!-- Canvas Container -->
-        <div class="relative w-full overflow-hidden bg-black/60 rounded-sm border border-white/10 flex justify-center items-center">
-          <canvas id="evCanvas" width="1100" height="480" class="w-full h-auto block"></canvas>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PDF Research Section -->
-  <section id="research" class="py-24 px-6 border-t border-white/10 relative z-20">
-    <div class="max-w-7xl mx-auto text-center">
-      <span class="font-mono text-xs text-neonred tracking-widest uppercase block mb-2">// COMPLETE DOCUMENTATION</span>
-      <h2 class="font-display text-3xl sm:text-5xl uppercase font-bold mb-8">DESIGN RESEARCH & <span class="text-neonred">WORKFLOW</span></h2>
-      
-      <div class="w-full h-[750px] glass-card p-2 rounded-sm">
-        <embed src="portfolio_compressed (1).pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" class="w-full h-full rounded-sm" />
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="border-t border-neonred/30 bg-darkbg py-24 px-6 relative z-20">
-    <div class="max-w-7xl mx-auto text-center flex flex-col items-center">
-      <h2 class="font-display text-4xl sm:text-7xl md:text-[8rem] font-extrabold uppercase leading-[0.85] mb-12 tracking-tight">
-        LET'S BUILD <br><span class="text-stroke">THE FUTURE</span>
-      </h2>
-      
-      <div class="flex flex-wrap justify-center gap-8 font-mono text-sm uppercase mb-12 tracking-wider">
-        <a href="https://www.artstation.com/aaditya_designs" target="_blank" class="hover:text-neonred transition-colors border-b border-transparent hover:border-neonred pb-1">ArtStation</a>
-        <a href="https://www.instagram.com/aaditya_designs" target="_blank" class="hover:text-neonred transition-colors border-b border-transparent hover:border-neonred pb-1">Instagram</a>
-        <a href="tel:9368891933" class="hover:text-neonred transition-colors border-b border-transparent hover:border-neonred pb-1">+91 9368891933</a>
-      </div>
-
-      <p class="font-mono text-xs text-gray-600 uppercase tracking-widest">© 2026 AADITYA VERMA. ALL RIGHTS RESERVED.</p>
-    </div>
-  </footer>
-
-  <!-- Lightbox Modal -->
-  <div id="imageModal" class="modal flex items-center justify-center p-4" onclick="closeModal()">
-    <div class="absolute top-8 right-12 text-neonred font-mono text-sm tracking-widest cursor-pointer hover:text-white" onclick="closeModal()">[ ESC / CLOSE ]</div>
-    <img class="max-w-[90vw] max-h-[85vh] border border-neonred/50 shadow-[0_0_50px_rgba(255,0,51,0.3)] object-contain" id="expandedImg">
-  </div>
-
-  <!-- Interactive Scripts -->
-  <script>
-    // Custom Cursor Movement
-    const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
-    });
-    
-    // Interactive Cursor Scaling
-    const interactables = document.querySelectorAll('a, button, .glass-card, canvas');
-    interactables.forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        cursor.style.width = '50px';
-        cursor.style.height = '50px';
-        cursor.style.background = 'transparent';
-        cursor.style.border = '2px solid #FF0033';
-      });
-      el.addEventListener('mouseleave', () => {
-        cursor.style.width = '18px';
-        cursor.style.height = '18px';
-        cursor.style.background = '#FF0033';
-        cursor.style.border = 'none';
-      });
-    });
-
-    // 3D Card Tilt Effect
-    const cards = document.querySelectorAll('.glass-card');
-    cards.forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 25;
-        const rotateY = (centerX - x) / 25;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-      });
-    });
-
-    // Category Filter Logic
-    function filterProjects(category, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => {
-        b.classList.remove('active', 'text-black');
-        b.classList.add('text-gray-400');
-      });
-      btn.classList.add('active');
-      btn.classList.remove('text-gray-400');
-
-      const items = document.querySelectorAll('.project-item');
-      items.forEach(item => {
-        if (category === 'all' || item.getAttribute('data-category') === category) {
-          item.style.display = 'flex';
-        } else {
-          item.style.display = 'none';
-        }
-      });
-    }
-
-    // Modal Image Lightbox
-    const modal = document.getElementById("imageModal");
-    const modalImg = document.getElementById("expandedImg");
-    const images = document.querySelectorAll('.project-img');
-
-    images.forEach(img => {
-      img.addEventListener('click', function(e) {
-        modal.style.display = "flex";
-        modalImg.src = this.src;
-        e.stopPropagation();
-      });
-    });
-
-    function closeModal() {
-      modal.style.display = "none";
-    }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === "Escape") closeModal();
-    });
-
-    // ==========================================
-    // 🎮 CONCEPT EV MINI-GAME LOGIC
-    // ==========================================
-    const canvas = document.getElementById('evCanvas');
-    const ctx = canvas.getContext('2d');
-
-    const uiScore = document.getElementById('gameScore');
-    const uiSpeed = document.getElementById('gameSpeed');
-    const uiNodes = document.getElementById('gameNodes');
-
-    let score = 0;
-    let nodesCollected = 0;
-
-    const evCar = {
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      width: 44,
-      height: 22,
-      angle: 0,
-      speed: 0,
-      maxSpeed: 7,
-      accel: 0.18,
-      friction: 0.96,
-      turnSpeed: 0.055
-    };
-
-    const keys = {};
-
-    window.addEventListener('keydown', e => {
-      keys[e.key.toLowerCase()] = true;
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-        // Prevent scrolling when playing game
-        if (document.activeElement === document.body) {
-          e.preventDefault();
-        }
-      }
-    });
-
-    window.addEventListener('keyup', e => {
-      keys[e.key.toLowerCase()] = false;
-    });
-
-    // Collectible Design Nodes
-    let designNodes = [];
-    function generateNodes() {
-      designNodes = [];
-      for (let i = 0; i < 5; i++) {
-        designNodes.push({
-          x: 80 + Math.random() * (canvas.width - 160),
-          y: 60 + Math.random() * (canvas.height - 120),
-          radius: 14,
-          active: true,
-          pulse: Math.random() * Math.PI * 2
-        });
-      }
-    }
-    generateNodes();
-
-    function updateGame() {
-      // Acceleration
-      if (keys['w'] || keys['arrowup']) {
-        evCar.speed = Math.min(evCar.speed + evCar.accel, evCar.maxSpeed);
-      } else if (keys['s'] || keys['arrowdown']) {
-        evCar.speed = Math.max(evCar.speed - evCar.accel, -evCar.maxSpeed / 2);
-      } else {
-        evCar.speed *= evCar.friction;
-      }
-
-      // Steering
-      if (Math.abs(evCar.speed) > 0.1) {
-        const direction = evCar.speed < 0 ? -1 : 1;
-        if (keys['a'] || keys['arrowleft']) evCar.angle -= evCar.turnSpeed * direction;
-        if (keys['d'] || keys['arrowright']) evCar.angle += evCar.turnSpeed * direction;
-      }
-
-      // Position update
-      evCar.x += Math.cos(evCar.angle) * evCar.speed;
-      evCar.y += Math.sin(evCar.angle) * evCar.speed;
-
-      // Bound Checks
-      if (evCar.x < 30) evCar.x = 30;
-      if (evCar.x > canvas.width - 30) evCar.x = canvas.width - 30;
-      if (evCar.y < 30) evCar.y = 30;
-      if (evCar.y > canvas.height - 30) evCar.y = canvas.height - 30;
-
-      // Check Collision with Nodes
-      designNodes.forEach(node => {
-        if (node.active) {
-          node.pulse += 0.05;
-          const dist = Math.hypot(evCar.x - node.x, evCar.y - node.y);
-          if (dist < node.radius + 18) {
-            node.active = false;
-            score += 150;
-            nodesCollected++;
-
-            if (nodesCollected >= 5) {
-              score += 500;
-              nodesCollected = 0;
-              generateNodes();
+    <!-- JAVASCRIPT FOR INTERACTIVITY -->
+    <script>
+        function openTab(evt, tabName) {
+            // Hide all tab contents
+            const panels = document.getElementsByClassName("content-panel");
+            for (let i = 0; i < panels.length; i++) {
+                panels[i].classList.remove("active");
             }
-          }
+
+            // Deactivate all buttons
+            const navBtns = document.getElementsByClassName("nav-btn");
+            for (let i = 0; i < navBtns.length; i++) {
+                navBtns[i].classList.remove("active");
+            }
+
+            // Show current tab & activate current button
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+
+            // Trigger animation for stat bars if profile tab is opened
+            if(tabName === 'profile') {
+                animateStatBars();
+            }
         }
-      });
 
-      // Update Telemetry HUD
-      uiScore.innerText = String(score).padStart(4, '0');
-      uiSpeed.innerText = Math.round(Math.abs(evCar.speed) * 28) + ' KM/H';
-      uiNodes.innerText = nodesCollected + ' / 5';
-    }
-
-    function renderGame() {
-      // Clear Background
-      ctx.fillStyle = '#08080c';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Render Cyber Floor Grid
-      ctx.strokeStyle = 'rgba(255, 0, 51, 0.08)';
-      ctx.lineWidth = 1;
-      for (let x = 0; x < canvas.width; x += 50) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-      }
-      for (let y = 0; y < canvas.height; y += 50) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-      }
-
-      // Render Collectible Nodes
-      designNodes.forEach(node => {
-        if (node.active) {
-          const pulseR = node.radius + Math.sin(node.pulse) * 3;
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, pulseR, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(0, 229, 255, 0.15)';
-          ctx.fill();
-          ctx.strokeStyle = '#00e5ff';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-
-          // Node Center Core
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, 4, 0, Math.PI * 2);
-          ctx.fillStyle = '#ffffff';
-          ctx.fill();
+        function animateStatBars() {
+            const bars = document.querySelectorAll('.stat-bar-fill');
+            bars.forEach(bar => {
+                const targetWidth = bar.getAttribute('data-width');
+                bar.style.width = targetWidth;
+            });
         }
-      });
 
-      // Render Concept EV Vector Model
-      ctx.save();
-      ctx.translate(evCar.x, evCar.y);
-      ctx.rotate(evCar.angle);
-
-      // Chassis Shadow
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-      ctx.fillRect(-evCar.width / 2, -evCar.height / 2 + 4, evCar.width, evCar.height);
-
-      // Sleek EV Body
-      ctx.fillStyle = '#FF0033';
-      ctx.beginPath();
-      ctx.roundRect(-evCar.width / 2, -evCar.height / 2, evCar.width, evCar.height, 4);
-      ctx.fill();
-
-      // Glass Windshield Canopy
-      ctx.fillStyle = '#040405';
-      ctx.beginPath();
-      ctx.roundRect(-evCar.width / 6, -evCar.height / 2.8, evCar.width / 2.2, evCar.height / 1.4, 2);
-      ctx.fill();
-
-      // Front Headlight Bars (Neon Red / White Glow)
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(evCar.width / 2 - 3, -evCar.height / 2 + 2, 3, 5);
-      ctx.fillRect(evCar.width / 2 - 3, evCar.height / 2 - 7, 3, 5);
-
-      // Rear Diffuser Light Strip
-      ctx.fillStyle = '#FF0033';
-      ctx.fillRect(-evCar.width / 2, -evCar.height / 2 + 3, 2, evCar.height - 6);
-
-      ctx.restore();
-    }
-
-    function gameLoop() {
-      updateGame();
-      renderGame();
-      requestAnimationFrame(gameLoop);
-    }
-
-    gameLoop();
-  </script>
+        // Initialize stat bar animation on load
+        window.onload = () => {
+            animateStatBars();
+        };
+    </script>
 </body>
 </html>
