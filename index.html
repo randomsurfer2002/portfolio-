@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Concept Studio | Interactive Three.js Experience</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Tailwind CSS CDN for overlay UI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- OrbitControls -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body class="bg-black text-white overflow-hidden select-none">
+
+  <!-- 3D Canvas Container -->
+  <div id="canvas-container" class="absolute inset-0 z-0"></div>
+
+  <!-- Cyberpunk HUD Overlay -->
+  <div class="relative z-10 pointer-events-none p-6 flex flex-col justify-between h-screen">
+    <!-- Top HUD Bar -->
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="font-mono text-xl font-bold text-red-500 tracking-wider">// STUDIO.3D_ENGINE</h1>
+        <p class="font-mono text-xs text-gray-400">Interactive Concept Surfacing & Lighting</p>
+      </div>
+      <div class="font-mono text-xs text-right text-gray-400">
+        <p>FPS: <span id="fpsCount" class="text-white font-bold">60</span></p>
+        <p>VERTICES: <span id="vertCount" class="text-red-500 font-bold">0</span></p>
+      </div>
+    </div>
+
+    <!-- Bottom Interactive Control Deck -->
+    <div class="pointer-events-auto bg-neutral-900/80 backdrop-blur-md border border-red-500/30 p-4 rounded-lg max-w-md w-full font-mono text-xs space-y-3">
+      <div class="flex justify-between items-center border-b border-white/10 pb-2">
+        <span class="text-red-500 font-bold">// VIEWPORT CONTROLS</span>
+        <span class="text-gray-500">[ MOUSE: ROTATE / ZOOM ]</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <button id="btnWireframe" class="bg-red-600 hover:bg-red-500 text-white py-1.5 px-3 rounded font-bold uppercase transition">
+          Toggle Wireframe
+        </button>
+        <button id="btnColor" class="bg-neutral-800 hover:bg-neutral-700 text-gray-300 py-1.5 px-3 rounded border border-white/10 font-bold uppercase transition">
+          Switch Paint
+        </button>
+      </div>
+      <div class="flex items-center gap-2 pt-1">
+        <label for="speedSlider" class="text-gray-400">Turntable Speed:</label>
+        <input type="range" id="speedSlider" min="0" max="0.02" step="0.001" value="0.005" class="w-full accent-red-500 cursor-pointer">
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
