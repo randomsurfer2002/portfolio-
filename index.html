@@ -1,57 +1,659 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Concept Studio | Interactive Three.js Experience</title>
-  <link rel="stylesheet" href="css/style.css">
-  <!-- Tailwind CSS CDN for overlay UI -->
+  <title>Aaditya Verma | Automotive & Industrial Design</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Three.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- OrbitControls -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Syncopate:wght@700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Syncopate', 'sans-serif'],
+            subheading: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            body: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            darkbg: '#040405',
+            neonred: '#FF0033',
+            glass: 'rgba(18, 18, 22, 0.5)',
+            glassborder: 'rgba(255, 0, 51, 0.2)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { 
+      background-color: #040405; 
+      color: #FFFFFF; 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: none;
+    }
+    
+    .noise-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 9999; opacity: 0.035;
+      background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    }
+
+    .glow-orb {
+      position: absolute; border-radius: 50%; filter: blur(140px); pointer-events: none; z-index: 0;
+    }
+
+    .text-stroke { -webkit-text-stroke: 2px #FF0033; color: transparent; }
+    .text-stroke-white { -webkit-text-stroke: 1.5px rgba(255,255,255,0.2); color: transparent; }
+
+    .glass-card {
+      background: rgba(14, 14, 18, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: border-color 0.4s, box-shadow 0.4s, transform 0.2s ease-out;
+      transform-style: preserve-3d;
+    }
+    
+    .glass-card:hover {
+      border-color: rgba(255, 0, 51, 0.6);
+      box-shadow: 0 10px 40px -10px rgba(255, 0, 51, 0.3);
+    }
+
+    #cursor {
+      position: fixed; top: 0; left: 0; width: 18px; height: 18px;
+      background: #FF0033; border-radius: 50%;
+      pointer-events: none; z-index: 10000; mix-blend-mode: difference;
+      transition: transform 0.08s ease-out, width 0.2s, height 0.2s, background 0.2s;
+      transform: translate(-50%, -50%);
+    }
+
+    .marquee-container { 
+      overflow: hidden; white-space: nowrap; width: 100%; background: #FF0033; color: #040405; 
+      padding: 1rem 0; font-family: 'Syncopate', sans-serif; font-weight: 800; font-size: 1.25rem; 
+      text-transform: uppercase; letter-spacing: 0.15em; 
+    }
+    .marquee-content { display: inline-block; animation: marquee 18s linear infinite; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    .filter-btn.active {
+      background-color: #FF0033;
+      color: #040405;
+      border-color: #FF0033;
+    }
+
+    .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(4, 4, 5, 0.96); backdrop-filter: blur(12px); }
+  </style>
 </head>
-<body class="bg-black text-white overflow-hidden select-none">
+<body class="selection:bg-neonred selection:text-black antialiased overflow-x-hidden font-body">
 
-  <!-- 3D Canvas Container -->
-  <div id="canvas-container" class="absolute inset-0 z-0"></div>
+  <div class="noise-overlay"></div>
+  <div id="cursor"></div>
 
-  <!-- Cyberpunk HUD Overlay -->
-  <div class="relative z-10 pointer-events-none p-6 flex flex-col justify-between h-screen">
-    <!-- Top HUD Bar -->
-    <div class="flex justify-between items-start">
-      <div>
-        <h1 class="font-mono text-xl font-bold text-red-500 tracking-wider">// STUDIO.3D_ENGINE</h1>
-        <p class="font-mono text-xs text-gray-400">Interactive Concept Surfacing & Lighting</p>
+  <!-- Background Glow FX -->
+  <div class="glow-orb bg-neonred w-[700px] h-[700px] top-[-250px] left-[-200px] opacity-20"></div>
+  <div class="glow-orb bg-red-950 w-[600px] h-[600px] top-[40%] right-[-150px] opacity-25"></div>
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full z-50 bg-darkbg/50 backdrop-blur-2xl border-b border-white/5 px-8 py-5 flex justify-between items-center">
+    <a href="#" class="font-display font-extrabold text-lg tracking-wider text-white">AADITYA<span class="text-neonred">.</span>VERMA</a>
+    
+    <nav class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest text-gray-400">
+      <a href="#work" class="hover:text-neonred transition-colors">// WORK</a>
+      <a href="#about" class="hover:text-neonred transition-colors">// ABOUT</a>
+      <a href="#game" class="hover:text-neonred transition-colors">// MINI GAME</a>
+      <a href="#research" class="hover:text-neonred transition-colors">// RESEARCH</a>
+    </nav>
+
+    <div class="flex items-center gap-3 border border-white/10 px-4 py-1.5 rounded-full bg-white/5">
+      <span class="w-2 h-2 rounded-full bg-neonred animate-pulse shadow-[0_0_8px_#FF0033]"></span>
+      <span class="text-xs font-mono text-gray-300 tracking-wider uppercase">AVAILABLE 2026</span>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="pt-36 pb-16 px-6 max-w-7xl mx-auto flex flex-col justify-center relative min-h-screen">
+    <div class="z-10 relative flex flex-col items-center text-center">
+      
+      <!-- Overlapping 3D Cutout Render -->
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[950px] z-20 pointer-events-none">
+        <img src="hero-car-cutout.png" alt="Hero Concept Render" class="w-full drop-shadow-[0_30px_70px_rgba(255,0,51,0.4)]">
       </div>
-      <div class="font-mono text-xs text-right text-gray-400">
-        <p>FPS: <span id="fpsCount" class="text-white font-bold">60</span></p>
-        <p>VERTICES: <span id="vertCount" class="text-red-500 font-bold">0</span></p>
+
+      <!-- Hero Typography -->
+      <h1 class="font-display font-extrabold text-[4.5rem] sm:text-[7.5rem] md:text-[9.5rem] uppercase leading-[0.85] tracking-tighter z-10 select-none">
+        <span class="text-stroke">AUTOMOTIVE</span><br>
+        <span class="text-white">DESIGNER</span><br>
+        <span class="text-stroke-white text-[3rem] sm:text-[5.5rem] md:text-[7rem]">& INDUSTRIAL</span>
+      </h1>
+      
+      <div class="mt-12 z-30 flex flex-wrap justify-center gap-4">
+        <span class="font-mono text-neonred text-xs uppercase tracking-widest bg-darkbg/90 px-5 py-2.5 border border-neonred/40 backdrop-blur-md shadow-[0_0_20px_rgba(255,0,51,0.2)]">
+          BLENDER / CYCLES / ALIAS / PROTOTYPING
+        </span>
       </div>
     </div>
+    
+    <!-- Live Telemetry Stat Bar -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-28 z-30 font-mono border-t border-b border-white/10 py-6 bg-white/[0.02]">
+      <div class="px-4">
+        <span class="text-xs text-gray-500 block uppercase">// FOCUS</span>
+        <span class="text-lg font-bold text-white font-subheading uppercase">CONCEPT EVs</span>
+      </div>
+      <div class="px-4 border-l border-white/10">
+        <span class="text-xs text-gray-500 block uppercase">// QUALIFICATION</span>
+        <span class="text-lg font-bold text-neonred font-subheading uppercase">CEED 2026 AIR 1215</span>
+      </div>
+      <div class="px-4 border-l border-white/10">
+        <span class="text-xs text-gray-500 block uppercase">// HIGHER ED</span>
+        <span class="text-lg font-bold text-white font-subheading uppercase">M.DES NIFT ND</span>
+      </div>
+      <div class="px-4 border-l border-white/10">
+        <span class="text-xs text-gray-500 block uppercase">// LOCATION</span>
+        <span class="text-lg font-bold text-white font-subheading uppercase">NEW DELHI, IN</span>
+      </div>
+    </div>
+  </section>
 
-    <!-- Bottom Interactive Control Deck -->
-    <div class="pointer-events-auto bg-neutral-900/80 backdrop-blur-md border border-red-500/30 p-4 rounded-lg max-w-md w-full font-mono text-xs space-y-3">
-      <div class="flex justify-between items-center border-b border-white/10 pb-2">
-        <span class="text-red-500 font-bold">// VIEWPORT CONTROLS</span>
-        <span class="text-gray-500">[ MOUSE: ROTATE / ZOOM ]</span>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <button id="btnWireframe" class="bg-red-600 hover:bg-red-500 text-white py-1.5 px-3 rounded font-bold uppercase transition">
-          Toggle Wireframe
-        </button>
-        <button id="btnColor" class="bg-neutral-800 hover:bg-neutral-700 text-gray-300 py-1.5 px-3 rounded border border-white/10 font-bold uppercase transition">
-          Switch Paint
-        </button>
-      </div>
-      <div class="flex items-center gap-2 pt-1">
-        <label for="speedSlider" class="text-gray-400">Turntable Speed:</label>
-        <input type="range" id="speedSlider" min="0" max="0.02" step="0.001" value="0.005" class="w-full accent-red-500 cursor-pointer">
-      </div>
+  <!-- Marquee Ticker -->
+  <div class="marquee-container shadow-[0_0_30px_rgba(255,0,51,0.3)] relative z-20">
+    <div class="marquee-content">
+      ★ AUTOMOTIVE SURFACING ★ CONCEPT EV DESIGN ★ BLENDER & CYCLES ★ IoT HARDWARE ★ INDUSTRIAL PROTOTYPING ★ 
+      ★ AUTOMOTIVE SURFACING ★ CONCEPT EV DESIGN ★ BLENDER & CYCLES ★ IoT HARDWARE ★ INDUSTRIAL PROTOTYPING ★ 
     </div>
   </div>
 
-  <script src="js/app.js"></script>
+  <!-- Projects Section -->
+  <section id="work" class="py-32 px-6 max-w-7xl mx-auto relative z-20">
+    
+    <!-- Header & Interactive Category Filter -->
+    <div class="mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
+      <div>
+        <span class="font-mono text-xs text-neonred tracking-widest uppercase block mb-2">// SELECTED WORKS</span>
+        <h2 class="font-display text-4xl sm:text-6xl uppercase font-bold text-stroke-white leading-none">FEATURED <span class="text-white text-stroke-0">PROJECTS</span></h2>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="flex flex-wrap gap-2 font-mono text-xs">
+        <button class="filter-btn active border border-white/20 px-4 py-2 uppercase tracking-wider transition-all" onclick="filterProjects('all', this)">ALL</button>
+        <button class="filter-btn border border-white/20 px-4 py-2 uppercase tracking-wider text-gray-400 transition-all" onclick="filterProjects('auto', this)">AUTOMOTIVE</button>
+        <button class="filter-btn border border-white/20 px-4 py-2 uppercase tracking-wider text-gray-400 transition-all" onclick="filterProjects('industrial', this)">INDUSTRIAL</button>
+      </div>
+    </div>
+
+    <!-- Project Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projectsGrid">
+      
+      <!-- Project 1 -->
+      <div class="glass-card project-item group cursor-pointer p-3 rounded-sm flex flex-col h-[500px]" data-category="auto">
+        <div class="overflow-hidden h-3/4 w-full relative rounded-sm">
+          <img src="car-render-1.jpg" alt="Hyper-Lethal Concept" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 project-img">
+          <span class="absolute top-4 left-4 bg-darkbg/80 border border-neonred/50 text-neonred font-mono text-xs px-3 py-1 uppercase tracking-widest">AUTOMOTIVE</span>
+        </div>
+        <div class="h-1/4 p-4 flex flex-col justify-between">
+          <div class="flex justify-between items-baseline">
+            <h3 class="font-bold font-subheading text-2xl uppercase tracking-wide">Hyper-Lethal Concept</h3>
+            <span class="font-mono text-xs text-gray-500">[01]</span>
+          </div>
+          <p class="text-xs text-gray-400 font-mono">Aerodynamic surface study focusing on aggressive downforce and active air channels.</p>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="glass-card project-item group cursor-pointer p-3 rounded-sm flex flex-col h-[500px]" data-category="auto">
+        <div class="overflow-hidden h-3/4 w-full relative rounded-sm">
+          <img src="car-render-clay.jpg" alt="EV Surface Topology" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 project-img">
+          <span class="absolute top-4 left-4 bg-darkbg/80 border border-white/20 text-white font-mono text-xs px-3 py-1 uppercase tracking-widest">SURFACING / CAD</span>
+        </div>
+        <div class="h-1/4 p-4 flex flex-col justify-between">
+          <div class="flex justify-between items-baseline">
+            <h3 class="font-bold font-subheading text-2xl uppercase tracking-wide">Concept EV Topology</h3>
+            <span class="font-mono text-xs text-gray-500">[02]</span>
+          </div>
+          <p class="text-xs text-gray-400 font-mono">Class-A surfacing exploration in Blender Cycles emphasizing light reflections.</p>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="glass-card project-item group cursor-pointer p-3 rounded-sm flex flex-col h-[520px]" data-category="industrial">
+        <div class="overflow-hidden h-2/3 w-full relative rounded-sm">
+          <img src="vayura-render-1.jpg" alt="Vayura Router" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 project-img">
+          <span class="absolute top-4 left-4 bg-darkbg/80 border border-neonred/50 text-neonred font-mono text-xs px-3 py-1 uppercase tracking-widest">INDUSTRIAL</span>
+        </div>
+        <div class="h-1/3 p-4 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-baseline">
+              <h3 class="font-bold font-subheading text-2xl uppercase tracking-wide">Vayura Router System</h3>
+              <span class="font-mono text-xs text-gray-500">[03]</span>
+            </div>
+            <p class="text-xs text-gray-400 font-mono mt-2">Dual-purpose Wi-Fi 6 router & smart scent-diffusion unit utilizing active thermal airflow.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="glass-card project-item group cursor-pointer p-3 rounded-sm flex flex-col h-[520px]" data-category="industrial">
+        <div class="overflow-hidden h-2/3 w-full relative rounded-sm">
+          <img src="tablet-box-1.jpg" alt="Smart Tablet Box" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 project-img">
+          <span class="absolute top-4 left-4 bg-darkbg/80 border border-white/20 text-white font-mono text-xs px-3 py-1 uppercase tracking-widest">IoT HARDWARE</span>
+        </div>
+        <div class="h-1/3 p-4 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-baseline">
+              <h3 class="font-bold font-subheading text-2xl uppercase tracking-wide">Smart Tablet Box</h3>
+              <span class="font-mono text-xs text-gray-500">[04]</span>
+            </div>
+            <p class="text-xs text-gray-400 font-mono mt-2">Medication management hardware featuring a 7x3 OLED matrix UI and interactive alerts.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About / Creator Bento Section -->
+  <section id="about" class="py-24 px-6 max-w-7xl mx-auto border-t border-white/10 relative z-20">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+      
+      <!-- Profile Portrait -->
+      <div class="md:col-span-5 glass-card p-3 rounded-sm min-h-[450px] relative overflow-hidden">
+        <img src="profile-portrait.jpg" alt="Aaditya Verma" class="w-full h-full object-cover rounded-sm grayscale contrast-125 hover:grayscale-0 transition-all duration-500">
+        <div class="absolute bottom-6 left-6 right-6 bg-darkbg/80 backdrop-blur-md p-4 border border-white/10 font-mono text-xs">
+          <span class="text-neonred font-bold block">// DESIGNER PROFILE</span>
+          <span class="text-white font-subheading text-lg font-bold">AADITYA VERMA</span>
+        </div>
+      </div>
+
+      <!-- Biography & Background -->
+      <div class="md:col-span-7 glass-card p-8 rounded-sm flex flex-col justify-between">
+        <div>
+          <span class="font-mono text-xs text-neonred tracking-widest uppercase">// BACKGROUND & PHILOSOPHY</span>
+          <h2 class="font-display text-3xl sm:text-4xl uppercase font-bold mt-2 mb-6">BRIDGING HIGH PERFORMANCE & FUNCTION</h2>
+          
+          <p class="text-gray-300 font-body text-sm leading-relaxed mb-6">
+            With a technical foundation in Information Technology from KNIT Sultanpur and advanced design training at NIFT New Delhi, I specialize in blending aggressive automotive aesthetics with functional ergonomics.
+          </p>
+
+          <div class="grid grid-cols-2 gap-4 font-mono text-xs border-t border-white/10 pt-6">
+            <div>
+              <span class="text-gray-500 block mb-1">SKILLS & TOOLS</span>
+              <ul class="text-gray-300 space-y-1">
+                <li>• Blender 3D / Cycles</li>
+                <li>• Concept Surfacing</li>
+                <li>• Physical Prototyping</li>
+                <li>• Arduino / IoT Hardware</li>
+              </ul>
+            </div>
+            <div>
+              <span class="text-gray-500 block mb-1">EDUCATION</span>
+              <ul class="text-gray-300 space-y-1">
+                <li>• M.Des — NIFT New Delhi</li>
+                <li>• B.Tech IT — KNIT Sultanpur</li>
+                <li>• High School — DPS Agra</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-white/10 flex justify-between items-center">
+          <span class="font-mono text-xs text-gray-500">CONTACT DIRECTLY:</span>
+          <a href="tel:9368891933" class="font-mono text-sm text-neonred hover:underline font-bold">+91 9368891933</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MINI GAME SECTION -->
+  <section id="game" class="py-24 px-6 border-t border-white/10 relative z-20">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+          <span class="font-mono text-xs text-neonred tracking-widest uppercase block mb-2">// INTERACTIVE TELEMETRY</span>
+          <h2 class="font-display text-3xl sm:text-5xl uppercase font-bold">CONCEPT EV <span class="text-neonred">TEST DRIVE</span></h2>
+        </div>
+        <div class="font-mono text-xs text-gray-400">
+          CONTROLS: <span class="text-white font-bold">[W / A / S / D]</span> or <span class="text-white font-bold">[ARROW KEYS]</span> TO STEER
+        </div>
+      </div>
+
+      <div class="glass-card p-6 rounded-sm relative overflow-hidden flex flex-col gap-4">
+        
+        <!-- Game HUD Overhead Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs border-b border-white/10 pb-4">
+          <div>
+            <span class="text-gray-500 block uppercase">// SCORE</span>
+            <span id="gameScore" class="text-lg font-bold text-neonred font-subheading">0000</span>
+          </div>
+          <div>
+            <span class="text-gray-500 block uppercase">// SPEED</span>
+            <span id="gameSpeed" class="text-lg font-bold text-white font-subheading">0 KM/H</span>
+          </div>
+          <div>
+            <span class="text-gray-500 block uppercase">// DESIGN NODES</span>
+            <span id="gameNodes" class="text-lg font-bold text-cyan-400 font-subheading">0 / 5</span>
+          </div>
+          <div>
+            <span class="text-gray-500 block uppercase">// STATUS</span>
+            <span class="text-lg font-bold text-emerald-400 font-subheading uppercase">ONLINE</span>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="relative w-full overflow-hidden bg-black/60 rounded-sm border border-white/10 flex justify-center items-center">
+          <canvas id="evCanvas" width="1100" height="480" class="w-full h-auto block"></canvas>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PDF Research Section -->
+  <section id="research" class="py-24 px-6 border-t border-white/10 relative z-20">
+    <div class="max-w-7xl mx-auto text-center">
+      <span class="font-mono text-xs text-neonred tracking-widest uppercase block mb-2">// COMPLETE DOCUMENTATION</span>
+      <h2 class="font-display text-3xl sm:text-5xl uppercase font-bold mb-8">DESIGN RESEARCH & <span class="text-neonred">WORKFLOW</span></h2>
+      
+      <div class="w-full h-[750px] glass-card p-2 rounded-sm">
+        <embed src="portfolio_compressed (1).pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" class="w-full h-full rounded-sm" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-neonred/30 bg-darkbg py-24 px-6 relative z-20">
+    <div class="max-w-7xl mx-auto text-center flex flex-col items-center">
+      <h2 class="font-display text-4xl sm:text-7xl md:text-[8rem] font-extrabold uppercase leading-[0.85] mb-12 tracking-tight">
+        LET'S BUILD <br><span class="text-stroke">THE FUTURE</span>
+      </h2>
+      
+      <div class="flex flex-wrap justify-center gap-8 font-mono text-sm uppercase mb-12 tracking-wider">
+        <a href="https://www.artstation.com/aaditya_designs" target="_blank" class="hover:text-neonred transition-colors border-b border-transparent hover:border-neonred pb-1">ArtStation</a>
+        <a href="https://www.instagram.com/aaditya_designs" target="_blank" class="hover:text-neonred transition-colors border-b border-transparent hover:border-neonred pb-1">Instagram</a>
+        <a href="tel:9368891933" class="hover:text-neonred transition-colors border-b border-transparent hover:border-neonred pb-1">+91 9368891933</a>
+      </div>
+
+      <p class="font-mono text-xs text-gray-600 uppercase tracking-widest">© 2026 AADITYA VERMA. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal -->
+  <div id="imageModal" class="modal flex items-center justify-center p-4" onclick="closeModal()">
+    <div class="absolute top-8 right-12 text-neonred font-mono text-sm tracking-widest cursor-pointer hover:text-white" onclick="closeModal()">[ ESC / CLOSE ]</div>
+    <img class="max-w-[90vw] max-h-[85vh] border border-neonred/50 shadow-[0_0_50px_rgba(255,0,51,0.3)] object-contain" id="expandedImg">
+  </div>
+
+  <!-- Interactive Scripts -->
+  <script>
+    // Custom Cursor Movement
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    
+    // Interactive Cursor Scaling
+    const interactables = document.querySelectorAll('a, button, .glass-card, canvas');
+    interactables.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '50px';
+        cursor.style.height = '50px';
+        cursor.style.background = 'transparent';
+        cursor.style.border = '2px solid #FF0033';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '18px';
+        cursor.style.height = '18px';
+        cursor.style.background = '#FF0033';
+        cursor.style.border = 'none';
+      });
+    });
+
+    // 3D Card Tilt Effect
+    const cards = document.querySelectorAll('.glass-card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 25;
+        const rotateY = (centerX - x) / 25;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+      });
+    });
+
+    // Category Filter Logic
+    function filterProjects(category, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active', 'text-black');
+        b.classList.add('text-gray-400');
+      });
+      btn.classList.add('active');
+      btn.classList.remove('text-gray-400');
+
+      const items = document.querySelectorAll('.project-item');
+      items.forEach(item => {
+        if (category === 'all' || item.getAttribute('data-category') === category) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Modal Image Lightbox
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("expandedImg");
+    const images = document.querySelectorAll('.project-img');
+
+    images.forEach(img => {
+      img.addEventListener('click', function(e) {
+        modal.style.display = "flex";
+        modalImg.src = this.src;
+        e.stopPropagation();
+      });
+    });
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === "Escape") closeModal();
+    });
+
+    // ==========================================
+    // 🎮 CONCEPT EV MINI-GAME LOGIC
+    // ==========================================
+    const canvas = document.getElementById('evCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const uiScore = document.getElementById('gameScore');
+    const uiSpeed = document.getElementById('gameSpeed');
+    const uiNodes = document.getElementById('gameNodes');
+
+    let score = 0;
+    let nodesCollected = 0;
+
+    const evCar = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      width: 44,
+      height: 22,
+      angle: 0,
+      speed: 0,
+      maxSpeed: 7,
+      accel: 0.18,
+      friction: 0.96,
+      turnSpeed: 0.055
+    };
+
+    const keys = {};
+
+    window.addEventListener('keydown', e => {
+      keys[e.key.toLowerCase()] = true;
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        // Prevent scrolling when playing game
+        if (document.activeElement === document.body) {
+          e.preventDefault();
+        }
+      }
+    });
+
+    window.addEventListener('keyup', e => {
+      keys[e.key.toLowerCase()] = false;
+    });
+
+    // Collectible Design Nodes
+    let designNodes = [];
+    function generateNodes() {
+      designNodes = [];
+      for (let i = 0; i < 5; i++) {
+        designNodes.push({
+          x: 80 + Math.random() * (canvas.width - 160),
+          y: 60 + Math.random() * (canvas.height - 120),
+          radius: 14,
+          active: true,
+          pulse: Math.random() * Math.PI * 2
+        });
+      }
+    }
+    generateNodes();
+
+    function updateGame() {
+      // Acceleration
+      if (keys['w'] || keys['arrowup']) {
+        evCar.speed = Math.min(evCar.speed + evCar.accel, evCar.maxSpeed);
+      } else if (keys['s'] || keys['arrowdown']) {
+        evCar.speed = Math.max(evCar.speed - evCar.accel, -evCar.maxSpeed / 2);
+      } else {
+        evCar.speed *= evCar.friction;
+      }
+
+      // Steering
+      if (Math.abs(evCar.speed) > 0.1) {
+        const direction = evCar.speed < 0 ? -1 : 1;
+        if (keys['a'] || keys['arrowleft']) evCar.angle -= evCar.turnSpeed * direction;
+        if (keys['d'] || keys['arrowright']) evCar.angle += evCar.turnSpeed * direction;
+      }
+
+      // Position update
+      evCar.x += Math.cos(evCar.angle) * evCar.speed;
+      evCar.y += Math.sin(evCar.angle) * evCar.speed;
+
+      // Bound Checks
+      if (evCar.x < 30) evCar.x = 30;
+      if (evCar.x > canvas.width - 30) evCar.x = canvas.width - 30;
+      if (evCar.y < 30) evCar.y = 30;
+      if (evCar.y > canvas.height - 30) evCar.y = canvas.height - 30;
+
+      // Check Collision with Nodes
+      designNodes.forEach(node => {
+        if (node.active) {
+          node.pulse += 0.05;
+          const dist = Math.hypot(evCar.x - node.x, evCar.y - node.y);
+          if (dist < node.radius + 18) {
+            node.active = false;
+            score += 150;
+            nodesCollected++;
+
+            if (nodesCollected >= 5) {
+              score += 500;
+              nodesCollected = 0;
+              generateNodes();
+            }
+          }
+        }
+      });
+
+      // Update Telemetry HUD
+      uiScore.innerText = String(score).padStart(4, '0');
+      uiSpeed.innerText = Math.round(Math.abs(evCar.speed) * 28) + ' KM/H';
+      uiNodes.innerText = nodesCollected + ' / 5';
+    }
+
+    function renderGame() {
+      // Clear Background
+      ctx.fillStyle = '#08080c';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Render Cyber Floor Grid
+      ctx.strokeStyle = 'rgba(255, 0, 51, 0.08)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 50) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 50) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+
+      // Render Collectible Nodes
+      designNodes.forEach(node => {
+        if (node.active) {
+          const pulseR = node.radius + Math.sin(node.pulse) * 3;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, pulseR, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(0, 229, 255, 0.15)';
+          ctx.fill();
+          ctx.strokeStyle = '#00e5ff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Node Center Core
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+        }
+      });
+
+      // Render Concept EV Vector Model
+      ctx.save();
+      ctx.translate(evCar.x, evCar.y);
+      ctx.rotate(evCar.angle);
+
+      // Chassis Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.fillRect(-evCar.width / 2, -evCar.height / 2 + 4, evCar.width, evCar.height);
+
+      // Sleek EV Body
+      ctx.fillStyle = '#FF0033';
+      ctx.beginPath();
+      ctx.roundRect(-evCar.width / 2, -evCar.height / 2, evCar.width, evCar.height, 4);
+      ctx.fill();
+
+      // Glass Windshield Canopy
+      ctx.fillStyle = '#040405';
+      ctx.beginPath();
+      ctx.roundRect(-evCar.width / 6, -evCar.height / 2.8, evCar.width / 2.2, evCar.height / 1.4, 2);
+      ctx.fill();
+
+      // Front Headlight Bars (Neon Red / White Glow)
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(evCar.width / 2 - 3, -evCar.height / 2 + 2, 3, 5);
+      ctx.fillRect(evCar.width / 2 - 3, evCar.height / 2 - 7, 3, 5);
+
+      // Rear Diffuser Light Strip
+      ctx.fillStyle = '#FF0033';
+      ctx.fillRect(-evCar.width / 2, -evCar.height / 2 + 3, 2, evCar.height - 6);
+
+      ctx.restore();
+    }
+
+    function gameLoop() {
+      updateGame();
+      renderGame();
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
 </body>
 </html>
