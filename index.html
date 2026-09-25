@@ -3,581 +3,735 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aaditya Verma | Need For Speed: Underground Portfolio</title>
-    <!-- Google Fonts for Gaming Aesthetic -->
+    <title>Aaditya Verma // Underground Arcade Portfolio</title>
+    <!-- Google Fonts for Arcade Aesthetics -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Press+Start+2P&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-color: #08080c;
-            --panel-bg: rgba(18, 19, 28, 0.85);
-            --panel-border: #00f3ff;
-            --neon-cyan: #00f3ff;
+            --bg-dark: #07070d;
             --neon-pink: #ff0055;
+            --neon-cyan: #00f3ff;
             --neon-yellow: #ffe600;
             --neon-green: #00ff66;
-            --text-main: #e0e6ed;
-            --text-dim: #8a99ad;
+            --glass-bg: rgba(18, 19, 32, 0.85);
+            --font-arcade: 'Press Start 2P', monospace;
             --font-head: 'Orbitron', sans-serif;
-            --font-code: 'Fira Code', monospace;
+            --font-body: 'Rajdhani', sans-serif;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            user-select: none;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 18px;
+            overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 50% 20%, rgba(0, 243, 255, 0.08) 0%, transparent 60%),
-                linear-gradient(0deg, rgba(255, 0, 85, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 24px;
-            color: var(--text-main);
-            font-family: var(--font-code);
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
+                radial-gradient(circle at 50% 10%, rgba(255, 0, 85, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(0, 243, 255, 0.12) 0%, transparent 50%);
         }
 
-        /* Container & Scanline Overlay */
-        .arcade-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.25), inset 0 0 15px rgba(0, 243, 255, 0.1);
-            background: var(--panel-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .arcade-container::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
+        /* Scanline CRT overlay */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
             background-size: 100% 4px;
-            z-index: 10;
+            z-index: 999;
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
-        /* Header Banner */
+        .main-wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Funky Header */
         header {
-            border-bottom: 2px solid var(--neon-cyan);
-            padding: 25px;
-            background: linear-gradient(90deg, rgba(255,0,85,0.2) 0%, rgba(0,243,255,0.1) 100%);
             text-align: center;
+            padding: 30px 20px;
+            background: var(--glass-bg);
+            border: 2px solid var(--neon-pink);
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4), inset 0 0 15px rgba(255, 0, 85, 0.2);
+            border-radius: 12px;
+            margin-bottom: 30px;
             position: relative;
         }
 
-        header h1 {
+        .glitch-title {
             font-family: var(--font-head);
-            font-size: 2rem;
+            font-size: 2.5rem;
+            font-weight: 900;
             color: #fff;
-            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
-            letter-spacing: 2px;
+            text-shadow: 3px 3px var(--neon-pink), -3px -3px var(--neon-cyan);
+            letter-spacing: 3px;
             text-transform: uppercase;
+            animation: pulseGlow 2s infinite alternate;
         }
 
-        .sub-header {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding: 8px 15px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--neon-pink);
-            font-size: 0.85rem;
+        @keyframes pulseGlow {
+            0% { text-shadow: 3px 3px var(--neon-pink), -3px -3px var(--neon-cyan); }
+            100% { text-shadow: 5px 5px var(--neon-cyan), -5px -5px var(--neon-pink), 0 0 20px var(--neon-yellow); }
+        }
+
+        .tagline {
             color: var(--neon-yellow);
+            font-family: var(--font-arcade);
+            font-size: 0.75rem;
+            margin-top: 12px;
+            word-spacing: 2px;
         }
 
-        /* Menu Navigation */
+        /* Navigation Buttons */
         nav {
             display: flex;
+            justify-content: center;
+            gap: 15px;
             flex-wrap: wrap;
-            background: #0d0e14;
-            border-bottom: 2px solid var(--neon-cyan);
+            margin-bottom: 30px;
         }
 
         .nav-btn {
-            flex: 1;
-            min-width: 150px;
-            padding: 15px 10px;
-            background: transparent;
-            border: none;
-            border-right: 1px solid rgba(0, 243, 255, 0.2);
-            color: var(--text-dim);
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 12px 24px;
             font-family: var(--font-head);
-            font-size: 0.8rem;
             font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 0 5px var(--neon-cyan);
         }
 
         .nav-btn:hover, .nav-btn.active {
             background: var(--neon-cyan);
             color: #000;
-            box-shadow: 0 0 15px var(--neon-cyan);
+            box-shadow: 0 0 25px var(--neon-cyan);
+            transform: scale(1.05) translateY(-3px);
+            text-shadow: none;
         }
 
-        /* Main Content Panels */
-        .content-panel {
+        /* Section Panels */
+        .panel {
             display: none;
+            background: var(--glass-bg);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            border-radius: 12px;
             padding: 30px;
-            animation: fadeIn 0.4s ease-in-out forwards;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
 
-        .content-panel.active {
+        .panel.active {
             display: block;
+            animation: slideUp 0.4s ease-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 {
+        h2.section-title {
             font-family: var(--font-head);
-            color: var(--neon-pink);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 8px var(--neon-pink);
-            border-left: 4px solid var(--neon-pink);
-            padding-left: 12px;
+            font-size: 1.8rem;
+            color: var(--neon-yellow);
+            border-bottom: 2px dashed var(--neon-yellow);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* Profile Grid */
-        .profile-grid {
+        /* Mini Car Game Container */
+        .game-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #gameCanvas {
+            border: 4px solid var(--neon-pink);
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.5);
+            border-radius: 8px;
+            background: #111;
+            max-width: 100%;
+        }
+
+        .game-dashboard {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+            background: #000;
+            border: 2px solid var(--neon-green);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: var(--font-arcade);
+            font-size: 0.8rem;
+            color: var(--neon-green);
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .ctrl-btn {
+            background: var(--neon-pink);
+            border: none;
+            color: #fff;
+            padding: 12px 20px;
+            font-family: var(--font-head);
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Gallery Grid for Images */
+        .gallery-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 25px;
         }
 
-        @media (max-width: 768px) {
-            .profile-grid { grid-template-columns: 1fr; }
-        }
-
-        .avatar-box {
-            border: 1px solid var(--neon-cyan);
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            text-align: center;
-            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
-        }
-
-        .avatar-img {
-            width: 100%;
-            max-width: 200px;
-            border: 2px solid var(--neon-yellow);
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-
-        .bio-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 4px;
-        }
-
-        .quote-box {
-            border-left: 3px solid var(--neon-yellow);
-            background: rgba(255, 230, 0, 0.05);
-            padding: 12px 15px;
-            font-style: italic;
-            margin-bottom: 20px;
-            color: #fff;
-        }
-
-        /* Attribute Stats Bars */
-        .stat-group {
-            margin-bottom: 15px;
-        }
-
-        .stat-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-        }
-
-        .stat-bar-bg {
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 2px;
+        .card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 8px;
             overflow: hidden;
-        }
-
-        .stat-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
-            width: 0%;
-            transition: width 1s ease-out;
-        }
-
-        /* Tech Pills */
-        .pill-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .pill {
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 4px 12px;
-            font-size: 0.8rem;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        /* Workflow Pipeline */
-        .workflow-timeline {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .step-card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--panel-border);
-            padding: 15px;
-            position: relative;
-        }
-
-        .step-number {
-            font-family: var(--font-head);
-            color: var(--neon-yellow);
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        /* Projects Layout */
-        .project-card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--neon-cyan);
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
-        }
-
-        .project-card h3 {
-            font-family: var(--font-head);
-            color: var(--neon-yellow);
-            margin-bottom: 10px;
-        }
-
-        .spec-list {
-            list-style: none;
-            margin-top: 15px;
-        }
-
-        .spec-list li {
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .spec-list li::before {
-            content: "►";
-            position: absolute;
-            left: 0;
-            color: var(--neon-pink);
-        }
-
-        /* Garage Showcase Grid */
-        .garage-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .garage-card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 15px;
             transition: all 0.3s ease;
         }
 
-        .garage-card:hover {
+        .card:hover {
             border-color: var(--neon-pink);
-            transform: translateY(-3px);
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
         }
 
-        .garage-card h4 {
+        .card-img-holder {
+            width: 100%;
+            height: 220px;
+            background: #151622;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img-holder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img-holder img {
+            transform: scale(1.08);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
             font-family: var(--font-head);
             color: var(--neon-cyan);
+            font-size: 1.2rem;
             margin-bottom: 8px;
         }
 
-        /* Terminal Footer / Credits */
-        .terminal-box {
-            background: #000;
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            padding: 20px;
-            font-family: var(--font-code);
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.15);
+        .card-desc {
+            font-size: 0.95rem;
+            color: #b0c0d0;
+            line-height: 1.4;
         }
 
-        /* Responsive Fixes */
-        @media (max-width: 600px) {
-            header h1 { font-size: 1.3rem; }
-            .sub-header { flex-direction: column; gap: 5px; text-align: center; }
-            .nav-btn { min-width: 100%; border-bottom: 1px solid rgba(0, 243, 255, 0.2); }
+        /* Bio Profile Card */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 850px) {
+            .profile-container { grid-template-columns: 1fr; }
+        }
+
+        .profile-pic-box {
+            border: 2px solid var(--neon-yellow);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 230, 0, 0.3);
+            max-height: 380px;
+        }
+
+        .profile-pic-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stat-bar-container {
+            margin-top: 12px;
+        }
+
+        .stat-name {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-head);
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            margin-bottom: 4px;
+        }
+
+        .stat-outer {
+            width: 100%;
+            height: 14px;
+            background: #000;
+            border: 1px solid var(--neon-cyan);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .stat-inner {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-yellow));
+            width: 0%;
+            transition: width 1.2s ease-in-out;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-family: var(--font-arcade);
+            font-size: 0.7rem;
+            color: var(--neon-green);
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="arcade-container">
+    <div class="crt-overlay"></div>
+
+    <div class="main-wrapper">
         <!-- HEADER -->
         <header>
-            <h1>▲ NEED FOR SPEED: UNDERGROUND PORTFOLIO ▲</h1>
-            <div class="sub-header">
-                <span>[ PLAYER_1: AADITYA VERMA ]</span>
-                <span>[ LEVEL: FINAL YEAR B.TECH ]</span>
-                <span>[ BUILD: UNICREN V2.6 ]</span>
-            </div>
+            <div class="glitch-title">AADITYA VERMA</div>
+            <div class="tagline">🏎️ INDUSTRIAL DESIGNER // 3D CONCEPT ARTIST // B.TECH IT</div>
         </header>
 
-        <!-- MENU NAVIGATION -->
+        <!-- NAVIGATION -->
         <nav>
-            <button class="nav-btn active" onclick="openTab(event, 'profile')">[01] DRIVER_PROFILE</button>
-            <button class="nav-btn" onclick="openTab(event, 'workflow')">[02] TUNING_WORKFLOW</button>
-            <button class="nav-btn" onclick="openTab(event, 'medbox')">[03] MED-BOX</button>
-            <button class="nav-btn" onclick="openTab(event, 'vayura')">[04] VAYURA</button>
-            <button class="nav-btn" onclick="openTab(event, 'garage')">[05] THE_GARAGE</button>
-            <button class="nav-btn" onclick="openTab(event, 'credits')">[06] CREDITS</button>
+            <button class="nav-btn active" onclick="switchTab('arcade')">🎮 MINI GAME</button>
+            <button class="nav-btn" onclick="switchTab('garage')">🏎️ THE GARAGE</button>
+            <button class="nav-btn" onclick="switchTab('projects')">💡 INDUSTRIAL DESIGN</button>
+            <button class="nav-btn" onclick="switchTab('bio')">👤 DRIVER PROFILE</button>
         </nav>
 
-        <!-- [01] DRIVER PROFILE -->
-        <div id="profile" class="content-panel active">
-            <h2>01 // DRIVER PROFILE</h2>
-            <div class="profile-grid">
-                <div class="avatar-box">
-                    <!-- SVG Arcade Avatar Placeholder -->
-                    <svg class="avatar-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="100" height="100" fill="#0d0e14"/>
-                        <circle cx="50" cy="35" r="20" fill="#00f3ff"/>
-                        <path d="M20 80C20 65 35 60 50 60C65 60 80 65 80 80V90H20V80Z" fill="#ff0055"/>
-                        <rect x="35" y="25" width="30" height="10" rx="3" fill="#12131c"/>
-                    </svg>
-                    <p style="font-weight: 700; color: var(--neon-cyan);">AVATAR // RACER_01</p>
-                    <p style="font-size: 0.8rem; color: var(--text-dim);">Go-Kart Chassis Builder</p>
+        <!-- [PANEL 1] MINI ARCADE CAR GAME -->
+        <div id="arcade" class="panel active">
+            <h2 class="section-title">🎮 OVERDRIVE ARCADE RACER</h2>
+            <div class="game-section">
+                <div class="game-dashboard">
+                    <div>SCORE: <span id="gameScore">0000</span></div>
+                    <div>NITRO: <span id="nitroStatus" style="color:var(--neon-yellow);">READY</span></div>
                 </div>
+                <canvas id="gameCanvas" width="360" height="480"></canvas>
+                <p style="font-size: 0.85rem; color: var(--neon-cyan); margin-top:5px;">
+                    🎮 <strong>Keyboard:</strong> Arrow Keys / [A][D] to Steer | [SPACE] for Nitro
+                </p>
+                <div class="game-controls">
+                    <button class="ctrl-btn" onclick="movePlayer(-1)">◄ LEFT</button>
+                    <button class="ctrl-btn" style="background:var(--neon-yellow); color:#000;" onclick="triggerNitro()">⚡ NITRO</button>
+                    <button class="ctrl-btn" onclick="movePlayer(1)">RIGHT ►</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- [PANEL 2] THE GARAGE (UPLOADED VEHICLE / 3D ART) -->
+        <div id="garage" class="panel">
+            <h2 class="section-title">🏎️ THE GARAGE // 3D AUTOMOTIVE ART</h2>
+            <div class="gallery-grid">
                 
-                <div class="bio-box">
-                    <div class="quote-box">
-                        "Gifted with the brain and logic of an engineer, but a heart full of emotion and love for aesthetics. This helps me develop meaningful projects with practicality and expression."
+                <!-- Go-Kart Photo -->
+                <div class="card">
+                    <div class="card-img-holder">
+                        <img src="Screenshot 2026-09-25 134258_2.png" alt="Aaditya Verma Go-Kart" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
                     </div>
+                    <div class="card-body">
+                        <div class="card-title">GO-KART CHASSIS BUILD</div>
+                        <div class="card-desc">Custom go-kart design & fabrication project engineered for high agility and raw track mechanics.</div>
+                    </div>
+                </div>
+
+                <!-- Porsche 356 -->
+                <div class="card">
+                    <div class="card-img-holder">
+                        <img src="Screenshot 2026-09-18 162959_2.png" alt="Porsche 356 Outlaw" onerror="this.src='https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">PORSCHE 356 OUTLAW #130</div>
+                        <div class="card-desc">Vintage 356 concept featuring aggressive wide arches, desert rally stance, and red mesh wire wheels.</div>
+                    </div>
+                </div>
+
+                <!-- Carbon Wheel Assembly -->
+                <div class="card">
+                    <div class="card-img-holder">
+                        <img src="Screenshot 2026-09-18 163053_2.png" alt="Carbon Wheel Assembly" onerror="this.src='https://images.unsplash.com/photo-1611245133802-53b6eb862f18?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">CARBON FIBER FENDER & WHEEL</div>
+                        <div class="card-desc">Detailed 3D material study of raw carbon weave, gold center-lock rim, and Michelin slick tire setup.</div>
+                    </div>
+                </div>
+
+                <!-- Nissan Z GT Widebody -->
+                <div class="card">
+                    <div class="card-img-holder">
+                        <img src="Screenshot 2026-09-18 163114_2.png" alt="Nissan Z GT" onerror="this.src='https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">NISSAN Z GT WIDEBODY</div>
+                        <div class="card-desc">Cyan widebody tuner featuring chassis-mounted GT wing, rear diffuser, and Donut Media roundel.</div>
+                    </div>
+                </div>
+
+                <!-- RCB F1 Livery -->
+                <div class="card">
+                    <div class="card-img-holder">
+                        <img src="Screenshot 2026-09-25 113618_2.png" alt="RCB F1 Livery" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">RCB F1 CONCEPT LIVERY</div>
+                        <div class="card-desc">Matte black Formula 1 vehicle concept designed with Royal Challengers Bangalore, Puma, and Exide branding.</div>
+                    </div>
+                </div>
+
+                <!-- Orange Hypercar -->
+                <div class="card">
+                    <div class="card-img-holder">
+                        <img src="Screenshot 2026-09-25 134105_2.png" alt="Orange Hypercar" onerror="this.src='https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">HYPERCAR "ORANGE WIDOW"</div>
+                        <div class="card-desc">Custom futuristic supercar concept showcasing broad splitter design, ring halo lights, and moody atmosphere.</div>
+                    </div>
+                </div>
+
+                <!-- BMW M4 GT -->
+                <div class="card">
+                    <div class="card-img-holder">
+                        <img src="image_f19f7c_2.png" alt="BMW M4 GT" onerror="this.src='https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">BMW M4 GT CONCEPT</div>
+                        <div class="card-desc">Deep blue metallic M4 GT widebody render with aggressive rear wing, quad exhausts, and LED tail glow.</div>
+                    </div>
+                </div>
+
+                <!-- Ferrari F1 Concept -->
+                <div class="card">
+                    <div class="card-img-holder">
+                        <img src="aaditya-verma-ferrari-concept7_2.jpg" alt="Ferrari F1 Concept" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">FERRARI F1 SHOWROOM CONCEPT</div>
+                        <div class="card-desc">Studio light setup highlighting aerodynamic sculpting, red LED grid surroundings, and race telemetry detail.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- [PANEL 3] INDUSTRIAL DESIGN PROJECTS -->
+        <div id="projects" class="panel">
+            <h2 class="section-title">💡 INDUSTRIAL & PRODUCT DESIGN</h2>
+            <div class="gallery-grid">
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title" style="color: var(--neon-yellow); font-size:1.4rem;">01 // VAYURA</div>
+                        <p style="color: var(--neon-cyan); font-weight:700; margin-bottom:10px;">Atmospheric Router & Essential Oil Diffuser</p>
+                        <p class="card-desc">
+                            Vayura bridges high-tech home Wi-Fi 6 with ambient aromatherapy. It intelligently channels waste thermal energy generated by the internal PCB to heat and diffuse essential oils contained in a top borosilicate glass column.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title" style="color: var(--neon-yellow); font-size:1.4rem;">02 // SMART TABLET BOX</div>
+                        <p style="color: var(--neon-cyan); font-weight:700; margin-bottom:10px;">IoT Medical Adherence System</p>
+                        <p class="card-desc">
+                            Designed to tackle medication non-adherence. Features a 7x3 matrix (Morning/Afternoon/Night) with color-coded backlighting, an OLED environmental HUD (temperature/humidity monitoring), and caregiver cloud notifications.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- [PANEL 4] DRIVER BIO / SKILLS -->
+        <div id="bio" class="panel">
+            <h2 class="section-title">👤 DRIVER PROFILE // AADITYA VERMA</h2>
+            <div class="profile-container">
+                <div class="profile-pic-box">
+                    <img src="Screenshot 2026-09-25 134258_2.png" alt="Aaditya Verma" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+                </div>
+                <div>
+                    <h3 style="font-family: var(--font-head); color: var(--neon-yellow); font-size: 1.5rem; margin-bottom: 10px;">
+                        ENGINEER'S BRAIN x ARTIST'S HEART
+                    </h3>
+                    <p style="line-height: 1.6; color: #d0e0f0; margin-bottom: 20px;">
+                        I am an avid learner and serious polymath curious about how the physical and digital world operates. Combining the structured analytical rigor of Information Technology with deep passion for automotive aesthetics and product design.
+                    </p>
+
+                    <h4 style="font-family: var(--font-head); color: var(--neon-pink); margin-top:15px;">ATTRIBUTES & PERFORMANCE METRICS</h4>
                     
-                    <h3>📊 DRIVER ATTRIBUTES & STATS</h3>
-                    <br>
-                    <div class="stat-group">
-                        <div class="stat-label"><span>Engineering & Logic</span><span>90%</span></div>
-                        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="90%"></div></div>
-                    </div>
-                    <div class="stat-group">
-                        <div class="stat-label"><span>Aesthetics & Design</span><span>100%</span></div>
-                        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="100%"></div></div>
-                    </div>
-                    <div class="stat-group">
-                        <div class="stat-label"><span>3D Modeling & Rendering</span><span>95%</span></div>
-                        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="95%"></div></div>
-                    </div>
-                    <div class="stat-group">
-                        <div class="stat-label"><span>User Empathy</span><span>82%</span></div>
-                        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="82%"></div></div>
+                    <div class="stat-bar-container">
+                        <div class="stat-name"><span>3D MODELING & BLENDER RENDERING</span><span>95%</span></div>
+                        <div class="stat-outer"><div class="stat-inner" data-val="95%"></div></div>
                     </div>
 
-                    <h3 style="margin-top: 25px;">🎓 EDUCATION LOG</h3>
-                    <p style="font-size: 0.9rem; margin-top: 5px;">• <strong>B.Tech in Information Technology:</strong> KNIT Sultanpur (2022–2026)</p>
-                    <p style="font-size: 0.9rem;">• <strong>High School & Higher Secondary:</strong> DPS Agra (2017–2020)</p>
+                    <div class="stat-bar-container">
+                        <div class="stat-name"><span>AUTOMOTIVE & LIVERY DESIGN</span><span>98%</span></div>
+                        <div class="stat-outer"><div class="stat-inner" data-val="98%"></div></div>
+                    </div>
 
-                    <h3 style="margin-top: 20px;">🛠️ SOFTWARE STACK</h3>
-                    <div class="pill-container">
-                        <span class="pill">Blender</span>
-                        <span class="pill">Photoshop</span>
-                        <span class="pill">Illustrator</span>
-                        <span class="pill">Canva</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-name"><span>ENGINEERING LOGIC & IOT</span><span>90%</span></div>
+                        <div class="stat-outer"><div class="stat-inner" data-val="90%"></div></div>
+                    </div>
+
+                    <div class="stat-bar-container">
+                        <div class="stat-name"><span>PRODUCT PROTOTYPING</span><span>88%</span></div>
+                        <div class="stat-outer"><div class="stat-inner" data-val="88%"></div></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- [02] TUNING WORKFLOW -->
-        <div id="workflow" class="content-panel">
-            <h2>02 // TUNING WORKFLOW</h2>
-            <p>Methodology for engineering and aesthetic execution pipeline:</p>
-            
-            <div class="workflow-timeline">
-                <div class="step-card">
-                    <div class="step-number">STAGE 01</div>
-                    <h4 style="color: #fff;">RESEARCH</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Problem statements identified and project functionality outlined.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">STAGE 02</div>
-                    <h4 style="color: #fff;">MANUAL DRAWING</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Sketch ideations and forms decided by pen-to-paper drawing.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">STAGE 03</div>
-                    <h4 style="color: #fff;">3D MODELING</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Mesh setup, polygon refinement, and materials finalization.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">STAGE 04</div>
-                    <h4 style="color: #fff;">RENDER ENGINES</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">High-fidelity rendering using Blender Cycles engine.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">STAGE 05</div>
-                    <h4 style="color: #fff;">FINAL SKETCH</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Color and form polishing for complete design alignment.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">STAGE 06</div>
-                    <h4 style="color: #fff;">FINAL RENDERS</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Post-processed outputs optimized for portfolio display.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- [03] SMART TABLET BOX -->
-        <div id="medbox" class="content-panel">
-            <h2>03 // PROJECT_01: SMART TABLET BOX</h2>
-            <div class="project-card">
-                <h3>IoT MEDICATION MANAGEMENT SYSTEM</h3>
-                <p style="font-size: 0.9rem; color: var(--text-dim);">
-                    Designed to eliminate medication non-adherence through visual haptics and real-time digital feedback. Features a 7x3 matrix covering a full weekly cycle (Morning, Afternoon, Night) with high-contrast backlit compartments.
-                </p>
-                <ul class="spec-list">
-                    <li><strong>Temporal Logic Matrix:</strong> 7-Day, 3-Tier Grid (M/A/N) layout for instant regimen status.</li>
-                    <li><strong>Chromatic Cues:</strong> Color-coded backlighting (Warm/Cool/Neutral) for dosage differentiation in low light.</li>
-                    <li><strong>Information-Rich HUD:</strong> Front OLED display showing environmental context (25°C, humidity) affecting medication.</li>
-                    <li><strong>Connectivity Stack:</strong> Bluetooth & Wi-Fi sync for automated caregiver notifications.</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- [04] VAYURA -->
-        <div id="vayura" class="content-panel">
-            <h2>04 // PROJECT_02: VAYURA</h2>
-            <div class="project-card">
-                <h3>DUAL-PURPOSE ATMOSPHERIC DEVICE</h3>
-                <p style="font-size: 0.9rem; color: var(--text-dim);">
-                    Merges a high-performance Wi-Fi 6 router with a smart scent-diffusion system. Utilizes active waste heat generated by the router's internal PCB to facilitate essential oil diffusion through a borosilicate glass column.
-                </p>
-                <ul class="spec-list">
-                    <li><strong>Thermal Scavenging:</strong> Engineered airflow channels heat from electronics directly into scent diffusion.</li>
-                    <li><strong>Material Contrast:</strong> Organic wood-grain base balanced against a precision monolithic spire.</li>
-                    <li><strong>Circular Haptics:</strong> Base LED ring provides non-intrusive ambient connectivity and oil-level alerts.</li>
-                    <li><strong>Modular Encapsulation:</strong> Quick-swap glass capsules enable maintenance without cross-contamination.</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- [05] THE GARAGE -->
-        <div id="garage" class="content-panel">
-            <h2>05 // THE GARAGE (3D CONCEPT ART)</h2>
-            <div class="garage-grid">
-                <div class="garage-card">
-                    <h4>PORSCHE 356 OUTLAW</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Vintage 356 custom build with wide rear arches, #130 racing circle, and red wire rims.</p>
-                </div>
-                <div class="garage-card">
-                    <h4>CARBON WHEEL ASSEMBLY</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Michelin slick tire mounted on carbon-fiber fender weave with gold center-lock wheel.</p>
-                </div>
-                <div class="garage-card">
-                    <h4>NISSAN Z GT WIDEBODY</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Cyan track beast featuring chassis-mounted GT wing and Donut roundel livery.</p>
-                </div>
-                <div class="garage-card">
-                    <h4>RCB F1 CAR LIVERY</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Matte black Formula 1 vehicle accented with Royal Challengers and Puma branding.</p>
-                </div>
-                <div class="garage-card">
-                    <h4>HYPERCAR "ORANGE WIDOW"</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Aggressive orange widebody hypercar with front splitter and halo ring optics.</p>
-                </div>
-                <div class="garage-card">
-                    <h4>BMW M4 GT & FERRARI F1</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Dark blue BMW M4 GT setup alongside a showcase Ferrari Formula 1 concept.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- [06] CREDITS -->
-        <div id="credits" class="content-panel">
-            <h2>06 // CREDITS</h2>
-            <div class="terminal-box">
-                <p>====================================================================</p>
-                <p>[!] MISSION ACCOMPLISHED</p>
-                <br>
-                <p>THANK YOU FOR WATCHING!</p>
-                <br>
-                <p>DESIGNER  : AADITYA VERMA</p>
-                <p>BRAND     : UNICREN</p>
-                <p>SPECIALTY : INDUSTRIAL DESIGN / AUTOMOTIVE CONCEPT ART / PRODUCT DEVELOPMENT</p>
-                <br>
-                <p>[ STATUS: READY FOR RECRUITMENT / CREATIVE COLLABORATION ]</p>
-                <p>====================================================================</p>
-            </div>
-        </div>
+        <!-- FOOTER -->
+        <footer>
+            [ PRESS 'R' TO REPLAY ] --- UNICREN DESIGN LABS --- [ ESC TO EXIT ]
+        </footer>
     </div>
 
-    <!-- JAVASCRIPT FOR INTERACTIVITY -->
+    <!-- JAVASCRIPT: TAB NAVIGATION, STAT ANIMATIONS & CANVAS CAR GAME -->
     <script>
-        function openTab(evt, tabName) {
-            // Hide all tab contents
-            const panels = document.getElementsByClassName("content-panel");
-            for (let i = 0; i < panels.length; i++) {
-                panels[i].classList.remove("active");
-            }
+        // --- Tab Navigation Switcher ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
-            // Deactivate all buttons
-            const navBtns = document.getElementsByClassName("nav-btn");
-            for (let i = 0; i < navBtns.length; i++) {
-                navBtns[i].classList.remove("active");
-            }
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
 
-            // Show current tab & activate current button
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
-
-            // Trigger animation for stat bars if profile tab is opened
-            if(tabName === 'profile') {
-                animateStatBars();
+            if(tabId === 'bio') {
+                setTimeout(animateStats, 100);
             }
         }
 
-        function animateStatBars() {
-            const bars = document.querySelectorAll('.stat-bar-fill');
-            bars.forEach(bar => {
-                const targetWidth = bar.getAttribute('data-width');
-                bar.style.width = targetWidth;
+        function animateStats() {
+            document.querySelectorAll('.stat-inner').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-val');
             });
         }
 
-        // Initialize stat bar animation on load
-        window.onload = () => {
-            animateStatBars();
+        // --- HTML5 CANVAS MINI CAR GAME ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let score = 0;
+        let gameOver = false;
+        let speed = 5;
+        let nitroActive = false;
+
+        // Player Car
+        const player = {
+            x: 160,
+            y: 380,
+            width: 40,
+            height: 70,
+            lane: 1, // 0: Left, 1: Center, 2: Right
+            lanes: [60, 160, 260]
         };
+
+        // Enemy Cars
+        let enemies = [
+            { x: 60, y: -100, width: 40, height: 70, speed: 4, color: '#ff0055' },
+            { x: 260, y: -300, width: 40, height: 70, speed: 6, color: '#ffe600' }
+        ];
+
+        function movePlayer(dir) {
+            player.lane += dir;
+            if(player.lane < 0) player.lane = 0;
+            if(player.lane > 2) player.lane = 2;
+            player.x = player.lanes[player.lane];
+        }
+
+        function triggerNitro() {
+            if(!nitroActive) {
+                nitroActive = true;
+                speed = 12;
+                document.getElementById('nitroStatus').innerText = "BOOSTING!";
+                document.getElementById('nitroStatus').style.color = "#00f3ff";
+                setTimeout(() => {
+                    speed = 5;
+                    nitroActive = false;
+                    document.getElementById('nitroStatus').innerText = "READY";
+                    document.getElementById('nitroStatus').style.color = "#ffe600";
+                }, 2000);
+            }
+        }
+
+        // Key Listeners
+        window.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowLeft' || e.key === 'a') movePlayer(-1);
+            if(e.key === 'ArrowRight' || e.key === 'd') movePlayer(1);
+            if(e.key === ' ' || e.key === 'ArrowUp') triggerNitro();
+        });
+
+        // Road Lines Offset
+        let roadOffset = 0;
+
+        function updateGame() {
+            if (gameOver) return;
+
+            // Score & Speed update
+            score += Math.floor(speed / 2);
+            document.getElementById('gameScore').innerText = score.toString().padStart(4, '0');
+
+            // Move Road
+            roadOffset += speed;
+            if(roadOffset > 40) roadOffset = 0;
+
+            // Update Enemies
+            enemies.forEach(enemy => {
+                enemy.y += speed + (enemy.speed - 4);
+                if(enemy.y > canvas.height) {
+                    enemy.y = -100;
+                    enemy.lane = Math.floor(Math.random() * 3);
+                    enemy.x = player.lanes[enemy.lane];
+                }
+
+                // Collision Detection
+                if(
+                    player.x < enemy.x + enemy.width &&
+                    player.x + player.width > enemy.x &&
+                    player.y < enemy.y + enemy.height &&
+                    player.y + player.height > enemy.y
+                ) {
+                    gameOver = true;
+                }
+            });
+
+            drawGame();
+            requestAnimationFrame(updateGame);
+        }
+
+        function drawGame() {
+            // Draw Highway Background
+            ctx.fillStyle = '#12131d';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Road Borders
+            ctx.fillStyle = '#00f3ff';
+            ctx.fillRect(10, 0, 6, canvas.height);
+            ctx.fillRect(344, 0, 6, canvas.height);
+
+            // Draw Lane Dividers
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([20, 20]);
+            ctx.lineDashOffset = -roadOffset;
+
+            ctx.beginPath();
+            ctx.moveTo(120, 0); ctx.lineTo(120, canvas.height);
+            ctx.moveTo(240, 0); ctx.lineTo(240, canvas.height);
+            ctx.stroke();
+
+            // Draw Player Car (Cyberpunk Cyan/Pink Sports Car)
+            ctx.fillStyle = nitroActive ? '#00f3ff' : '#ff0055';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Cockpit
+            ctx.fillStyle = '#000';
+            ctx.fillRect(player.x + 8, player.y + 15, 24, 20);
+
+            // Draw Enemies
+            enemies.forEach(enemy => {
+                ctx.fillStyle = enemy.color;
+                ctx.shadowColor = enemy.color;
+                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(enemy.x + 8, enemy.y + 35, 24, 18);
+            });
+
+            ctx.shadowBlur = 0; // Reset glow
+
+            // Draw Game Over Screen
+            if(gameOver) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.font = '20px "Orbitron"';
+                ctx.fillStyle = '#ff0055';
+                ctx.textAlign = 'center';
+                ctx.fillText('CRASHED!', canvas.width / 2, 200);
+
+                ctx.font = '12px "Press Start 2P"';
+                ctx.fillStyle = '#ffe600';
+                ctx.fillText('SCORE: ' + score, canvas.width / 2, 250);
+
+                ctx.font = '14px "Rajdhani"';
+                ctx.fillStyle = '#00f3ff';
+                ctx.fillText('Click anywhere to Restart', canvas.width / 2, 300);
+            }
+        }
+
+        // Restart Game
+        canvas.addEventListener('click', () => {
+            if(gameOver) {
+                score = 0;
+                gameOver = false;
+                enemies[0].y = -100;
+                enemies[1].y = -300;
+                updateGame();
+            }
+        });
+
+        // Start Mini Game Loop
+        updateGame();
     </script>
 </body>
 </html>
